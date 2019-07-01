@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import android.widget.TextView
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.*
-import com.google.gson.Gson
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -40,6 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -50,7 +49,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         var metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
-        Log.d("pudong", metrics.density.toString())
 
     }
 
@@ -65,15 +63,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         coordinates.add(LatLng(39.9047253699,116.4072154982))
         coordinates.add(LatLng(39.0850853357,117.1993482089))
 
+        /*
         //Add markers and move the camera
         when(coordinates.size){
             0 -> nonMarker(mMap)
             else -> addMarkersToMap(coordinates)
-        }
+        }*/
         mMap.addMarker(MarkerOptions().position(LatLng(36.5535809156,116.7519861043)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station)))
+        mMap.addMarker(MarkerOptions().position(LatLng(38.0427810026,114.5143212580)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_price)))
+
+        //mMap.addMarker(MarkerOptions().position(LatLng(39.9939544339,117.1005165346)).icon(BitmapDescriptorFactory.fromResource(R.drawable.t34)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(40.1095820808,117.7404697928)).icon(BitmapDescriptorFactory.fromResource(R.drawable.test)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(39.5188913704,115.5157698773)).icon(BitmapDescriptorFactory.fromResource(R.drawable.test1)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(40.1179761492,115.6915092499)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ttt)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(39.0618318074,115.6530580736)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot5)))
+
+        mMap.addMarker(MarkerOptions().position(LatLng(38.3044167994,116.8386942891)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_gray)))
+        mMap.addMarker(MarkerOptions().position(LatLng(39.9047253699,116.4072154982)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow)))
+        mMap.addMarker(MarkerOptions().position(LatLng(39.0850853357,117.1993482089)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_red)))
         mMap.addMarker(MarkerOptions().position(LatLng(40.8244345101,114.8875440254)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green)))
-        mMap.addMarker(MarkerOptions().position(LatLng(38.3044167994,116.8386942891)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station)))
-        mMap.addMarker(MarkerOptions().position(LatLng(38.0427810026,114.5143212580)).icon(BitmapDescriptorFactory.fromResource(R.drawable.t34)))
+
 
     }
 
@@ -86,6 +95,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             moveCameraAtBeginning(currentLatLng!!)
             limitMoveCamera(currentLatLng!!)
         }
+
+
     }
 
     //it is suitable for several points ( >0)
@@ -146,16 +157,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //add icon for map mark
     private fun addIcon(markerOptions: MarkerOptions, type : Int = FUEL_STATION){
         when(type){
-            FUEL_STATION->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station))
+            FUEL_STATION->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station1))
             FUEL_PRICE->{
                 var fuel_view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
                 fuel_view.findViewById<TextView>(R.id.price).text = "123"
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(this, fuel_view)))
             }
-            PARKING_GREEN->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green))
-            PARKING_RED->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_red))
-            PARKING_YELLOW->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow))
-            PARKING_GRAY->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_gray))
+            PARKING_GREEN->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green1))
+            PARKING_RED->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_red1))
+            PARKING_YELLOW->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow1))
+            PARKING_GRAY->markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_gray1))
         }
 
     }

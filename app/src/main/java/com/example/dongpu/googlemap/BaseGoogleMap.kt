@@ -2,13 +2,19 @@ package com.example.dongpu.googlemap
 
 import android.app.Activity
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.*
 
 /**
@@ -176,5 +182,24 @@ class BaseGoogleMap {
      */
     fun getCameraPosition() : CameraPosition{
         return mMap.cameraPosition
+    }
+
+    /**
+     * we can get the screen cooprates of (southwest and northeast)
+     * but before we use it, at first it will show (0, 0) and (0, 0), but after movement, it will show correct bounds
+     * @return 2 latlngBounds
+     */
+    fun getMapBounds() : LatLngBounds{
+        return mMap.projection.visibleRegion.latLngBounds
+    }
+
+    /**
+     * we use it to get user location
+     */
+    fun getUserLocation(context: Context){
+        var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 10F, object : LocationListener)
+        }
     }
 }

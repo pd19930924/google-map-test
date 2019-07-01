@@ -2,6 +2,7 @@ package com.example.dongpu.googlemap
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -31,7 +32,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         coordinates.add(LatLng(39.0850853357,117.1993482089))
         baseGoogleMap.addMarkersToMap(coordinates)
         baseGoogleMap.moveCamera(LatLng(39.9047253699,116.4072154982))
-        baseGoogleMap.setCameraZoom(12f)
-        baseGoogleMap.drawCircleOnMap(LatLng(39.9047253699,116.4072154982), 25000.0, resources.getColor(R.color.color_dog_blue))
     }
+
+
 }
