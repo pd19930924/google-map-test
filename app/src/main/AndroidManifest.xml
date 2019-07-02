@@ -27,6 +27,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <meta-data
+            android:name="com.here.android.maps.appid"
+            android:value="FOboWdj3Aj5a2AuBUac3"></meta-data>
+
+        <meta-data
+            android:name="com.here.android.maps.apptoken"
+            android:value="XZlRdkVoUqBd78LOy_mhyw"></meta-data>
+
+        <meta-data
+            android:name="com.here.android.maps.license.key"
+            android:value="fwV6EjuLMU7jB9LbSYx8tyzOgF+o19IzV6TwlVktkttfeaBVOZ+WbJnCsp2a6y3SmEI0nLxGq4YsflgLAZoXe3pKJKtVzoLt091EN74/X/j649IvxcwRgoPsd68TxfVAWb2lqvPVVNEn1angYgMrIoXgLf/+zky9GSlTdFEsEvk1zD++OcvdWZvJbh7bvwJvjUi0HPoRJyDqV+3ZOgq1PSSe7sHZPBZ3bvZyl08Pqxi/+OauUiMvBYpRuV5iU38aCR831ULfAkGwU4nHwmvwSyBJzSqLpaFx4xoRV3lFNK8KNxLROxtSJAbhqsO6gJbGhBNb/ZhcROrHi5GweQ+m7k8/rVtf7U3aR1vnL4GuYre92y9c7raRSAOziaAH/fv9EZg0KGDQaH8GZOXnhj/Ozlysl1cyXdXVFgvc+MSFf01golRhUZ2QBZBvPA5pFWLFJocYVyEU8Ngedv8hrNAhsBFmHJu4PEhx5SHZysUzlEcJkMpSiWXaBPyK+ERdPyUR/3BVCP4hKRbogiv+FvTEzyseAgH7/lhEylDXO7tnaggpnDLFHgIx/p2IGcUNEpBJjNM/3yg8IX6aUuZ2lrEhrP2pzZQRgwRxA5A34zL2iTURY9aRChYtIlCkz5EBQhSC2+7iMCwtevRWV9i/VnTvAlkpD7Y+6P3lJJCbzeOo0iE="></meta-data>
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"

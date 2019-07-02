@@ -22,6 +22,13 @@ android {
     }
 }
 
+repositories{
+
+    flatDir{
+        dirs 'libs'
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
@@ -32,4 +39,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/gson-2.7.jar')
     compile 'com.google.maps.android:android-maps-utils:0.5'
+    compile(name:'HERE-sdk', ext:'aar')
 }
