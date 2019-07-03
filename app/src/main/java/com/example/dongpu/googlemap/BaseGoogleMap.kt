@@ -320,6 +320,15 @@ class BaseGoogleMap {
         return mMap.projection.visibleRegion.latLngBounds
     }
 
+    /**
+     * return markerList, to help users do other work
+     * @return markList
+     */
+    fun getMarkerList() : List<Marker>{
+        return markerList
+    }
+
+
     //paint a special bitmap pic form layout for marker icon
     private fun createDrawableFromView(context : Context, view : View) : Bitmap {
         var displayMetrics = DisplayMetrics()
