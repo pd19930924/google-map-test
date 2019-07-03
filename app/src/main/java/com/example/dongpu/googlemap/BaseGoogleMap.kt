@@ -107,7 +107,7 @@ class BaseGoogleMap {
                 break
             }
         }
-        if(currentMarker == null)Log.e(TAG, "There is no point")
+        if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
         else{
             currentMarker.isVisible = true  //show the marker
             hideMarkerList.remove(currentMarker!!)   //we have restore the marker, so we delete the marker in hideMarkerList
@@ -121,7 +121,7 @@ class BaseGoogleMap {
      */
     fun showMarker(index : Int){
         if(markerList.size < index){
-            Log.e(TAG, "The index is out of range")
+            Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return
         }
         var marker = markerList.get(index)
@@ -133,7 +133,7 @@ class BaseGoogleMap {
      * @param marker we use exist marker to show marker
      */
     fun showMarker(marker: Marker){
-        if(!hideMarkerList.remove(marker)) Log.e("pudong","The marker is not hidden")
+        if(!hideMarkerList.remove(marker)) Log.e(TAG, MARKET_NOT_HIDDEN)
     }
 
     /**
@@ -150,7 +150,7 @@ class BaseGoogleMap {
             }
         }
         //if currentMarker is null , it means that we does not have the marker
-        if(currentMarker == null)Log.e(TAG, "There is no point")
+        if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
         else{
             currentMarker.isVisible = false
             hideMarkerList.add(currentMarker)  //set hidemMarkerList
@@ -164,7 +164,7 @@ class BaseGoogleMap {
      */
     fun hideMarker(index : Int){
         if(markerList.size < index){
-            Log.e(TAG, "The index is out of range")
+            Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return
         }
         var marker = markerList.get(index)
@@ -176,8 +176,50 @@ class BaseGoogleMap {
      * @param marker we use exist marker to hide the marker
      */
     fun hideMarker(marker: Marker){
-        if(!markerList.contains(marker)) Log.e(TAG, "The marker is not existing")
+        if(!markerList.contains(marker)) Log.e(TAG, MARKET_NOT_EXIST_ERROR)
         else hideMarkerList.add(marker)
+    }
+
+    /**
+     * remove existing marker
+     * @param latLng
+     */
+    fun removeMarker(latLng : LatLng){
+        var currentMarker : Marker? = null
+        for(marker in markerList){
+            var mLatLng = marker.position  //get latLng
+            if(mLatLng.equals(latLng)){
+                currentMarker = marker
+                break
+            }
+        }
+        //if currentMarker is null , it means that we does not have the marker
+        if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
+        else markerList.remove(currentMarker)
+    }
+
+    /**
+     * remove existing marker
+     * @param index
+     */
+    fun removeMarker(index: Int){
+        if(markerList.size < index){
+            Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
+            return
+        }
+        var marker = markerList.get(index)
+        marker.remove()
+    }
+
+    /**
+     * @param marker we use exist marker to hide the marker
+     */
+    fun removeMarker(marker: Marker){
+        if(!markerList.contains(marker)) Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+        else{
+            marker.remove()
+            markerList.remove(marker)
+        }
     }
 
     /**
@@ -290,5 +332,9 @@ class BaseGoogleMap {
 
     companion object {
         val TAG = "BaseGoogleMap"
+        val LATLNG_NOT_EXIST_ERROR = "The latitude and longtitude is not exisiting"
+        val MARKET_NOT_EXIST_ERROR = "The marker is not existing"
+        val INDEX_OUT_OF_RANGE_ERROR = "The index is out of range"
+        val MARKET_NOT_HIDDEN = "The marker has not hidden"
     }
 }

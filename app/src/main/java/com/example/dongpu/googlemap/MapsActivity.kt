@@ -120,7 +120,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         Handler().postDelayed(object : Runnable{
             override fun run() {
-                var latLng = LatLng(36.5535809156,116.7519861043)
+                var latLng = LatLng(36.55358,116.7519861043)
                 baseGoogleMap.showMarker(latLng)
             }
         },4000)
