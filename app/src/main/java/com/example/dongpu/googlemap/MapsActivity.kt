@@ -75,14 +75,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         coordinates.add(LatLng(39.9047253699,116.4072154982))
         coordinates.add(LatLng(39.0850853357,117.1993482089))
 
-        /*
-        //Add markers and move the camera
-        when(coordinates.size){
-            0 -> nonMarker(mMap)
-            else -> addMarkersToMap(coordinates)
-        }
-        mMap.addMarker(MarkerOptions().position(LatLng(36.5535809156,116.7519861043)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station)))
-        mMap.addMarker(MarkerOptions().position(LatLng(38.0427810026,114.5143212580)).icon(BitmapDescriptorFactory.fromResource(R.drawable.fuel)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(36.5535809156,116.7519861043)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fuel_station)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(38.0427810026,114.5143212580)).icon(BitmapDescriptorFactory.fromResource(R.drawable.fuel)))
 
         //mMap.addMarker(MarkerOptions().position(LatLng(39.9939544339,117.1005165346)).icon(BitmapDescriptorFactory.fromResource(R.drawable.t34)))
         //mMap.addMarker(MarkerOptions().position(LatLng(40.1095820808,117.7404697928)).icon(BitmapDescriptorFactory.fromResource(R.drawable.test)))
@@ -90,11 +84,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //mMap.addMarker(MarkerOptions().position(LatLng(40.1179761492,115.6915092499)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ttt)))
         //mMap.addMarker(MarkerOptions().position(LatLng(39.0618318074,115.6530580736)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot5)))
 
-        mMap.addMarker(MarkerOptions().position(LatLng(38.3044167994,116.8386942891)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_1)))
-        mMap.addMarker(MarkerOptions().position(LatLng(39.9047253699,116.4072154982)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_2)))
-        mMap.addMarker(MarkerOptions().position(LatLng(39.0850853357,117.1993482089)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_3)))
-        mMap.addMarker(MarkerOptions().position(LatLng(40.8244345101,114.8875440254)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_4png)))*/
+        //mMap.addMarker(MarkerOptions().position(LatLng(38.3044167994,116.8386942891)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_1)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(39.9047253699,116.4072154982)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_2)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(39.0850853357,117.1993482089)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_3)))
+        mMap.addMarker(MarkerOptions().position(LatLng(40.8244345101,114.8875440254)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow)))
 
+        mMap.setOnMarkerClickListener {
+            it.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.yellow_bigger))
+            true
+        }
+
+        /*
         var baseGoogleMap = BaseGoogleMap(mMap)
 
         var latLngList = ArrayList<LatLng>()
@@ -133,7 +133,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setOnCameraIdleListener(mClusterManager)
         mMap.setOnMarkerClickListener(mClusterManager)
         //addItems()
-        addItems(latLngList)*/
+        addItems(latLngList)*/*/
     }
 
     private fun addItems(){
