@@ -113,15 +113,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         Handler().postDelayed(object : Runnable{
             override fun run() {
-                var latLng = LatLng(36.5535809156,116.7519861043)
-                baseGoogleMap.hideMarker(latLng)
+                Log.d("pudong","1")
+                var latLng = LatLng(38.3044167994,116.8386942891)
+                baseGoogleMap.removeMarker(latLng)
             }
         },2000)
 
         Handler().postDelayed(object : Runnable{
             override fun run() {
-                var latLng = LatLng(36.55358,116.7519861043)
-                baseGoogleMap.showMarker(latLng)
+                Log.d("pudong","2")
+                var latLng = LatLng(38.3044167994,116.8386942891)
+                baseGoogleMap.removeMarker(latLng)
             }
         },4000)
 

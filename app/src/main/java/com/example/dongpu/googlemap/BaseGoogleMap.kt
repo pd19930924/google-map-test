@@ -195,7 +195,10 @@ class BaseGoogleMap {
         }
         //if currentMarker is null , it means that we does not have the marker
         if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
-        else markerList.remove(currentMarker)
+        else {
+            currentMarker.remove()
+            markerList.remove(currentMarker)
+        }
     }
 
     /**
@@ -209,10 +212,11 @@ class BaseGoogleMap {
         }
         var marker = markerList.get(index)
         marker.remove()
+        markerList.remove(marker)
     }
 
     /**
-     * @param marker we use exist marker to hide the marker
+     * @param marker we use exist marker to remove the marker
      */
     fun removeMarker(marker: Marker){
         if(!markerList.contains(marker)) Log.e(TAG, MARKET_NOT_EXIST_ERROR)
