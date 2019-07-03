@@ -24,8 +24,14 @@ class BaseGoogleMap {
 
     private lateinit var mMap : GoogleMap
 
+    private lateinit var markerList : ArrayList<Marker>  //it is used to remove markers, hide markers
+
+    private lateinit var hideMarkerList : ArrayList<Marker>  //it is used to storage hide markers in case that we need to show some hide markers
+
     constructor(mMap: GoogleMap){
         this.mMap = mMap
+        this.markerList = ArrayList<Marker>()
+        this.hideMarkerList = ArrayList<Marker>()
     }
 
     /**
@@ -46,7 +52,8 @@ class BaseGoogleMap {
             var bitmapDescriptorFactory = BitmapDescriptorFactory.fromResource(drawableResouce)
             markerOptions.icon(bitmapDescriptorFactory)
         }
-        mMap.addMarker(markerOptions)
+        var marker = mMap.addMarker(markerOptions)
+        markerList.add(marker)
     }
 
     /**
@@ -67,21 +74,8 @@ class BaseGoogleMap {
         }
         var bitmapDescriptorFactory = BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, view))
         markerOptions.icon(bitmapDescriptorFactory)
-        mMap.addMarker(markerOptions)
-    }
-
-    //paint a special bitmap pic form layout for marker icon
-    private fun createDrawableFromView(context : Context, view : View) : Bitmap {
-        var displayMetrics = DisplayMetrics()
-        (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
-        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.layout(0,0 , displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.buildDrawingCache()
-        var bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
-        var canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
+        var marker = mMap.addMarker(markerOptions)
+        markerList.add(marker)
     }
 
     /**
@@ -95,8 +89,95 @@ class BaseGoogleMap {
         for(point in points){
             var markerOptions = MarkerOptions()
             markerOptions.position(point)
-            mMap.addMarker(markerOptions)
+            var marker = mMap.addMarker(markerOptions)
+            markerList.add(marker)
         }
+    }
+
+    /**
+     * show hide marker if we have hide it
+     * @param latLng
+     */
+    fun showMarker(latLng: LatLng){
+        var currentMarker : Marker? = null
+        for(marker in hideMarkerList){
+            var mLatLng = marker.position
+            if(mLatLng.equals(latLng)){
+                currentMarker = marker
+                break
+            }
+        }
+        if(currentMarker == null)Log.e(TAG, "There is no point")
+        else{
+            currentMarker.isVisible = true  //show the marker
+            hideMarkerList.remove(currentMarker!!)   //we have restore the marker, so we delete the marker in hideMarkerList
+        }
+    }
+
+    /**
+     * show, if we know this is which market we add, we can move it dirrectly
+     * and we can avoid searching all markers
+     * @param index it is which index of our marker
+     */
+    fun showMarker(index : Int){
+        if(markerList.size < index){
+            Log.e(TAG, "The index is out of range")
+            return
+        }
+        var marker = markerList.get(index)
+        marker.isVisible = true
+        hideMarkerList.remove(marker)   //set hidemMarkerList
+    }
+
+    /**
+     * @param marker we use exist marker to show marker
+     */
+    fun showMarker(marker: Marker){
+        if(!hideMarkerList.remove(marker)) Log.e("pudong","The marker is not hidden")
+    }
+
+    /**
+     * hide the marker, we need to search all markers to hide the marker
+     * @param latLng
+     */
+    fun hideMarker(latLng: LatLng){
+        var currentMarker : Marker? = null
+        for(marker in markerList){
+            var mLatLng = marker.position  //get latLng
+            if(mLatLng.equals(latLng)){
+                currentMarker = marker
+                break
+            }
+        }
+        //if currentMarker is null , it means that we does not have the marker
+        if(currentMarker == null)Log.e(TAG, "There is no point")
+        else{
+            currentMarker.isVisible = false
+            hideMarkerList.add(currentMarker)  //set hidemMarkerList
+        }
+    }
+
+    /**
+     * hide the market, if we know this is which market we add, we can move it dirrectly
+     * and we can avoid searching all markers
+     * @param index it is which index of our marker
+     */
+    fun hideMarker(index : Int){
+        if(markerList.size < index){
+            Log.e(TAG, "The index is out of range")
+            return
+        }
+        var marker = markerList.get(index)
+        marker.isVisible = false
+        hideMarkerList.add(marker)   //set hidemMarkerList
+    }
+
+    /**
+     * @param marker we use exist marker to hide the marker
+     */
+    fun hideMarker(marker: Marker){
+        if(!markerList.contains(marker)) Log.e(TAG, "The marker is not existing")
+        else hideMarkerList.add(marker)
     }
 
     /**
@@ -193,13 +274,21 @@ class BaseGoogleMap {
         return mMap.projection.visibleRegion.latLngBounds
     }
 
-    /**
-     * we use it to get user location
-     */
-    fun getUserLocation(context: Context){
-        var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 10F, object : LocationListener)
-        }
+    //paint a special bitmap pic form layout for marker icon
+    private fun createDrawableFromView(context : Context, view : View) : Bitmap {
+        var displayMetrics = DisplayMetrics()
+        (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        view.layout(0,0 , displayMetrics.widthPixels, displayMetrics.heightPixels)
+        view.buildDrawingCache()
+        var bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+        var canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    companion object {
+        val TAG = "BaseGoogleMap"
     }
 }
