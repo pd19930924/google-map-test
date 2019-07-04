@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -341,6 +342,25 @@ class BaseGoogleMap {
         var canvas = Canvas(bitmap)
         view.draw(canvas)
         return bitmap
+    }
+
+    //paint a special bitmap pic form layout for marker icon
+    fun createBitmapFromView(view : View) : Bitmap {
+        val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        view.measure(measureSpec, measureSpec)
+
+        val measuredWidth = view.measuredWidth
+        val measuredHeight = view.measuredHeight
+
+        view.layout(0, 0, measuredWidth, measuredHeight)
+
+        val r = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+        r.eraseColor(Color.TRANSPARENT)
+
+        val canvas = Canvas(r)
+        view.draw(canvas)
+
+        return r
     }
 
     companion object {
