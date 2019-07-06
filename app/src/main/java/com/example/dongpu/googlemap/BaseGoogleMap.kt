@@ -1,21 +1,12 @@
 package com.example.dongpu.googlemap
 
-import android.app.Activity
-import android.content.Context
-import android.content.Context.LOCATION_SERVICE
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.*
 
 /**
@@ -67,13 +58,13 @@ class BaseGoogleMap {
      * var view = Inflater.from(context).inflater(R.layout.main, null)  //There is a key point, we should initialize our view at first
      * addMarkerToMap(Latlng(31.1, 32.3), "str" , this, view)
      */
-    fun addMarkerToMap(point : LatLng, title : String? = null, context : Context, view : View){
+    fun addMarkerToMap(point : LatLng, title : String? = null, view : View){
         var markerOptions = MarkerOptions()
         markerOptions.position(point)
         if(title != null){
             markerOptions.title(title)
         }
-        var bitmapDescriptorFactory = BitmapDescriptorFactory.fromBitmap(createDrawableFromView(context, view))
+        var bitmapDescriptorFactory = BitmapDescriptorFactory.fromBitmap(createBitmapFromView(view))
         markerOptions.icon(bitmapDescriptorFactory)
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
@@ -327,21 +318,6 @@ class BaseGoogleMap {
      */
     fun getMarkerList() : List<Marker>{
         return markerList
-    }
-
-
-    //paint a special bitmap pic form layout for marker icon
-    private fun createDrawableFromView(context : Context, view : View) : Bitmap {
-        var displayMetrics = DisplayMetrics()
-        (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
-        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.layout(0,0 , displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.buildDrawingCache()
-        var bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
-        var canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
     }
 
     //paint a special bitmap pic form layout for marker icon
