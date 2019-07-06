@@ -1,4 +1,9 @@
 <resources>
-    <string name="app_name">googleMap</string>
+    <string name="app_name">googleMapTest</string>
     <string name="title_activity_maps">Map</string>
+    
+    <string name="add_default_marker">add default marker</string>
+    <string name="add_drawable_marker">add drawable marker</string>
+    <string name="add_layout_marker">add layout marker</string>
+    <string name="switch_current_choice">switch</string>
 </resources>

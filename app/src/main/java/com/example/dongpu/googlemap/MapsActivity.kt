@@ -1,28 +1,13 @@
 package com.example.dongpu.googlemap
 
-import android.app.Activity
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.location.Address
-import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.LocaleList
-import android.provider.Telephony
 import android.util.DisplayMetrics
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import com.example.dongpu.googlemap.R
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.*
-import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -87,12 +72,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //mMap.addMarker(MarkerOptions().position(LatLng(38.3044167994,116.8386942891)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_1)))
         //mMap.addMarker(MarkerOptions().position(LatLng(39.9047253699,116.4072154982)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_2)))
         //mMap.addMarker(MarkerOptions().position(LatLng(39.0850853357,117.1993482089)).icon(BitmapDescriptorFactory.fromResource(R.drawable.pot_3)))
-        mMap.addMarker(MarkerOptions().position(LatLng(40.8244345101,114.8875440254)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow)))
+        //mMap.addMarker(MarkerOptions().position(LatLng(40.8244345101,114.8875440254)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_yellow)))
 
+        /*
         mMap.setOnMarkerClickListener {
             it.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.yellow_bigger))
             true
-        }
+        }*/
 
         /*
         var baseGoogleMap = BaseGoogleMap(mMap)
@@ -144,7 +130,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             var offset = i/60.0
             lat = lat+offset
             lng = lng+offset
-            var myItem = MyItem(LatLng(lat,lng))
+            var myItem = MyItem(LatLng(lat, lng))
             mClusterManager!!.addItem(myItem)
             i++
         }
