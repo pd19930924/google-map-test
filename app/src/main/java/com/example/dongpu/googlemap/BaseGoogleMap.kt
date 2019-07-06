@@ -34,7 +34,7 @@ class BaseGoogleMap {
      * it is an example : addMarkerToMap(Latlng(31.1, 32.3), "str" , resouce.getDrawable(R.drawable.pic))
      */
     @JvmOverloads
-    fun addMarkerToMap(point : LatLng, title : String? = null, drawableResouce : Int? = null){
+    fun addMarkerToMap(point : LatLng, title : String? = null, drawableResouce : Int? = null) : Marker{
         var markerOptions = MarkerOptions()
         markerOptions.position(point)
         if(title != null){
@@ -46,6 +46,7 @@ class BaseGoogleMap {
         }
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
+        return marker
     }
 
     /**
@@ -54,11 +55,12 @@ class BaseGoogleMap {
      * @param title if title exists, there will be a title if we click marker
      * @param context it is come from our activity, we need it to load our view
      * @param view marker icon will be replaced to our pic
+     * @return return our maker to help us to do other work to marker
      * it is an example :
      * var view = Inflater.from(context).inflater(R.layout.main, null)  //There is a key point, we should initialize our view at first
      * addMarkerToMap(Latlng(31.1, 32.3), "str" , this, view)
      */
-    fun addMarkerToMap(point : LatLng, title : String? = null, view : View){
+    fun addMarkerToMap(point : LatLng, title : String? = null, view : View) : Marker{
         var markerOptions = MarkerOptions()
         markerOptions.position(point)
         if(title != null){
@@ -68,6 +70,7 @@ class BaseGoogleMap {
         markerOptions.icon(bitmapDescriptorFactory)
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
+        return marker
     }
 
     /**

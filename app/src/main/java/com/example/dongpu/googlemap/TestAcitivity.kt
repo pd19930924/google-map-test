@@ -11,7 +11,9 @@ import com.example.dongpu.googlemap.R
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import org.w3c.dom.Text
 
 /**
@@ -28,6 +30,10 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
     private var latLngList = ArrayList<LatLng>()
 
+    private var lastMarker : Marker? = null
+
+    private var markerType : Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.test_activity)
@@ -42,9 +48,21 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         addDrawableMarkerBtn = findViewById(R.id.add_drawable_marker)
         addLayoutMarkerBtn = findViewById(R.id.add_layout_marker)
 
-        addDefaultMarkerBtn.setOnClickListener { baseGoogleMap.clear(); addDefaulMarkers() }
-        addDrawableMarkerBtn.setOnClickListener { baseGoogleMap.clear(); addDrawableMarkers() }
-        addLayoutMarkerBtn.setOnClickListener { baseGoogleMap.clear(); addLayoutMarkers() }
+        addDefaultMarkerBtn.setOnClickListener {
+            lastMarker = null
+            baseGoogleMap.clear()
+            markerType = DEFAULT
+            addDefaulMarkers() }
+        addDrawableMarkerBtn.setOnClickListener {
+            lastMarker = null
+            baseGoogleMap.clear()
+            markerType = DRAWABLE
+            addDrawableMarkers() }
+        addLayoutMarkerBtn.setOnClickListener {
+            lastMarker = null
+            baseGoogleMap.clear()
+            markerType = LAYOUT
+            addLayoutMarkers() }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -54,6 +72,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         initLatLng()
         initMap()
+        initMarkerClick()
     }
 
     private fun initMap(){
@@ -72,10 +91,31 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         latLngList.add(latLng4)
     }
 
+    private fun initMarkerClick(){
+        mMap.setOnMarkerClickListener {
+            when(markerType){
+                DEFAULT -> clickDefaultMarker(it)
+                DRAWABLE -> clickDrawableMarker(it)
+                LAYOUT -> clickLayoutMarker(it)
+            }
+            true
+        }
+    }
+
     private fun addDefaulMarkers(){
         for(latLng in latLngList){
             baseGoogleMap.addMarkerToMap(latLng)
         }
+    }
+
+    private fun clickDefaultMarker(marker: Marker){
+        if(lastMarker == null){
+            lastMarker = marker
+        }else{
+            lastMarker!!.zIndex = 0f
+        }
+        marker.zIndex = 2f
+        lastMarker = marker
     }
 
     private fun addDrawableMarkers(){
@@ -84,13 +124,59 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         }
     }
 
+    private fun clickDrawableMarker(marker: Marker){
+        if(lastMarker == null){
+            lastMarker = marker
+        }else{
+            lastMarker!!.zIndex = 0f
+            lastMarker!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green))
+        }
+        //here we use a big pic to show our map
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green_big))
+        marker.zIndex = 2f
+        lastMarker = marker
+    }
+
     private fun addLayoutMarkers(){
+        //here we use marker.title to store our data in view
         for(latLng in latLngList){
             var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
-            var price = view.findViewById<TextView>(R.id.value)
+            var value = view.findViewById<TextView>(R.id.value)
             var background = view.findViewById<LinearLayout>(R.id.background)
-            price.text = "value"
-            baseGoogleMap.addMarkerToMap(latLng, "", view)
+            value.text = "value"
+            var marker = baseGoogleMap.addMarkerToMap(latLng, "", view)
+            marker.title = "value"
         }
+    }
+
+    private fun clickLayoutMarker(marker: Marker){
+        if(lastMarker == null){
+            lastMarker = marker
+        }else{
+            lastMarker!!.zIndex = 0f
+            var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
+            var value = view.findViewById<TextView>(R.id.value)
+            var background = view.findViewById<LinearLayout>(R.id.background)
+            value.text = lastMarker!!.title  //because we build a new view, so we need to use our title to restore the value
+            value.textSize = 14f
+            background.setBackgroundResource(R.drawable.ic_fuel_price)
+            lastMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
+            lastMarker = marker
+        }
+        var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
+        var value = view.findViewById<TextView>(R.id.value)
+        var background = view.findViewById<LinearLayout>(R.id.background)
+        value.text = marker.title
+        value.textSize = 16f
+        background.setBackgroundResource(R.drawable.ic_fuel_price_big)
+        marker.zIndex = 2f
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
+    }
+
+    companion object {
+        //which kind of marker we are shoing
+        val DEFAULT = 0
+        val DRAWABLE = 1
+        val LAYOUT = 2
     }
 }
