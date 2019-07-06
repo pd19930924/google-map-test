@@ -112,6 +112,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         if(lastMarker == null){
             lastMarker = marker
         }else{
+            if(lastMarker!!.equals(marker)) return
             lastMarker!!.zIndex = 0f
         }
         marker.zIndex = 2f
@@ -128,6 +129,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         if(lastMarker == null){
             lastMarker = marker
         }else{
+            if(lastMarker!!.equals(marker)) return
             lastMarker!!.zIndex = 0f
             lastMarker!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green))
         }
@@ -153,6 +155,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         if(lastMarker == null){
             lastMarker = marker
         }else{
+            if(lastMarker!!.equals(marker)) return
             lastMarker!!.zIndex = 0f
             var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
             var value = view.findViewById<TextView>(R.id.value)
