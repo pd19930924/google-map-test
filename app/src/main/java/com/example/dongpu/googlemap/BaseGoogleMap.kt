@@ -320,6 +320,15 @@ class BaseGoogleMap {
         return markerList
     }
 
+    /**
+     * clear all datas on map, we can use mMap.clear() to remove all markers
+     * but also ,we need to clear our map list
+     */
+    fun clear(){
+        markerList.clear()
+        mMap.clear()
+    }
+
     //paint a special bitmap pic form layout for marker icon
     fun createBitmapFromView(view : View) : Bitmap {
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
