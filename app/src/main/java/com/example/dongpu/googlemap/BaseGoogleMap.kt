@@ -77,9 +77,9 @@ class BaseGoogleMap {
      * This is function that we can use it to set markers on Map
      * @param points it is points that we need to add on Map (point =  LatLng(latitude, longtitude))
      */
-    fun addMarkersToMap(points : ArrayList<LatLng>){
+    fun addMarkersToMap(points : ArrayList<LatLng>) : List<Marker>{
         if(points.size == 0){
-            return
+            return markerList
         }
         for(point in points){
             var markerOptions = MarkerOptions()
@@ -87,6 +87,7 @@ class BaseGoogleMap {
             var marker = mMap.addMarker(markerOptions)
             markerList.add(marker)
         }
+        return markerList
     }
 
     /**
