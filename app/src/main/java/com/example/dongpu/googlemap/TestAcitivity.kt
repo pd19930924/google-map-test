@@ -2,19 +2,16 @@ package com.example.dongpu.googlemap
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Layout
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.example.dongpu.googlemap.R
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import org.w3c.dom.Text
 
 /**
  * Created by dong.pu on 2019/6/25.
