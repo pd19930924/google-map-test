@@ -31,6 +31,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
     private var markerType : Int = -1
 
+    private var markerTest : MarkerTest? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.test_activity)
@@ -49,17 +51,17 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
             lastMarker = null
             baseGoogleMap.clear()
             markerType = DEFAULT
-            addDefaulMarkers() }
+            markerTest!!.addDefaulMarkers() }
         addDrawableMarkerBtn.setOnClickListener {
             lastMarker = null
             baseGoogleMap.clear()
             markerType = DRAWABLE
-            addDrawableMarkers() }
+            markerTest!!.addDrawableMarkers() }
         addLayoutMarkerBtn.setOnClickListener {
             lastMarker = null
             baseGoogleMap.clear()
             markerType = LAYOUT
-            addLayoutMarkers() }
+            markerTest!!.addLayoutMarkers() }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -69,12 +71,18 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         initLatLng()
         initMap()
+        initMarkerTest()
         initMarkerClick()
     }
 
     private fun initMap(){
         baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //at first, we move our camera to 40.721270, -73.982380(in New York)
         baseGoogleMap.setCameraZoom(6F)   //at first, we set zoom at the level of continent
+    }
+
+    private fun initMarkerTest(){
+        markerTest = MarkerTest(baseGoogleMap,applicationContext)
+        markerTest!!.latLngList = latLngList
     }
 
     private fun initLatLng(){
@@ -91,86 +99,12 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
     private fun initMarkerClick(){
         mMap.setOnMarkerClickListener {
             when(markerType){
-                DEFAULT -> clickDefaultMarker(it)
-                DRAWABLE -> clickDrawableMarker(it)
-                LAYOUT -> clickLayoutMarker(it)
+                DEFAULT -> markerTest!!.clickDefaultMarker(it)
+                DRAWABLE -> markerTest!!.clickDrawableMarker(it)
+                LAYOUT -> markerTest!!.clickLayoutMarker(it)
             }
             true
         }
-    }
-
-    private fun addDefaulMarkers(){
-        for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng)
-        }
-    }
-
-    private fun clickDefaultMarker(marker: Marker){
-        if(lastMarker == null){
-            lastMarker = marker
-        }else{
-            if(lastMarker!!.equals(marker)) return
-            lastMarker!!.zIndex = 0f
-        }
-        marker.zIndex = 2f
-        lastMarker = marker
-    }
-
-    private fun addDrawableMarkers(){
-        for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng, "", R.drawable.ic_parking_green)
-        }
-    }
-
-    private fun clickDrawableMarker(marker: Marker){
-        if(lastMarker == null){
-            lastMarker = marker
-        }else{
-            if(lastMarker!!.equals(marker)) return
-            lastMarker!!.zIndex = 0f
-            lastMarker!!.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green))
-        }
-        //here we use a big pic to show our map
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_green_big))
-        marker.zIndex = 2f
-        lastMarker = marker
-    }
-
-    private fun addLayoutMarkers(){
-        //here we use marker.title to store our data in view
-        for(latLng in latLngList){
-            var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
-            var value = view.findViewById<TextView>(R.id.value)
-            var background = view.findViewById<LinearLayout>(R.id.background)
-            value.text = "value"
-            var marker = baseGoogleMap.addMarkerToMap(latLng, "", view)
-            marker.title = "value"
-        }
-    }
-
-    private fun clickLayoutMarker(marker: Marker){
-        if(lastMarker == null){
-            lastMarker = marker
-        }else{
-            if(lastMarker!!.equals(marker)) return
-            lastMarker!!.zIndex = 0f
-            var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
-            var value = view.findViewById<TextView>(R.id.value)
-            var background = view.findViewById<LinearLayout>(R.id.background)
-            value.text = lastMarker!!.title  //because we build a new view, so we need to use our title to restore the value
-            value.textSize = 14f
-            background.setBackgroundResource(R.drawable.ic_fuel_price)
-            lastMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
-            lastMarker = marker
-        }
-        var view = LayoutInflater.from(applicationContext).inflate(R.layout.fuel_price_layout, null)
-        var value = view.findViewById<TextView>(R.id.value)
-        var background = view.findViewById<LinearLayout>(R.id.background)
-        value.text = marker.title
-        value.textSize = 16f
-        background.setBackgroundResource(R.drawable.ic_fuel_price_big)
-        marker.zIndex = 2f
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
     }
 
     companion object {
