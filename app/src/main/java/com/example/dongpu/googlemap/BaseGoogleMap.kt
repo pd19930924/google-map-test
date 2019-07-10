@@ -273,6 +273,15 @@ class BaseGoogleMap {
     }
 
     /**
+     * This is used to forbid the movement of camera when we try to make our camera can not go far away
+     * @param centerLatLng our cameraCenter
+     */
+    fun forbidCameraMove(centerLatLng: LatLng){
+        var mapBounds = LatLngBounds(centerLatLng, centerLatLng)
+        mMap.setLatLngBoundsForCameraTarget(mapBounds)
+    }
+
+    /**
      * This is used to limit the movement of camera when we try to make our camera can not go far away
      * This will make a rectangle(?), and we can only move in the rectangle
      * @param leftTopLatLng left top point
@@ -281,6 +290,13 @@ class BaseGoogleMap {
     fun limitCameraMove(leftTopLatLng : LatLng, rightBottomLatLng : LatLng){
         var mapBounds = LatLngBounds(leftTopLatLng, rightBottomLatLng)
         mMap.setLatLngBoundsForCameraTarget(mapBounds)
+    }
+
+    /**
+     * This is used to free our camera move after using forbidCameraMove or limitCameraMove
+     */
+    fun freeCameraMove(){
+        mMap.setLatLngBoundsForCameraTarget(null)
     }
 
     /**
@@ -306,6 +322,10 @@ class BaseGoogleMap {
      */
     fun getCameraPosition() : CameraPosition{
         return mMap.cameraPosition
+    }
+
+    fun getCameraLatLng() : LatLng{
+        return mMap.cameraPosition.target
     }
 
     /**
