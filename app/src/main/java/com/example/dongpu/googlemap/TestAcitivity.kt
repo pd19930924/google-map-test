@@ -122,6 +122,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         var centerLatLng = LatLng(40.721270, -73.982380)
 
         var circleTest = CircleTest(baseGoogleMap)
+        circleTest.centerLatLng = centerLatLng
 
         addDefaultCircleBtn.setOnClickListener {circleTest.drawDefaultCircle() }
 
