@@ -230,12 +230,13 @@ class BaseGoogleMap {
      * @param color if color exists, our circle color will changed
      */
     @JvmOverloads
-    fun drawCircleOnMap(centerLatLng: LatLng, radius : Double, color : Int? = null){
+    fun drawCircleOnMap(centerLatLng: LatLng, radius : Double, color : Int? = null) : Circle{
         var circleOptions = CircleOptions()
         circleOptions.center(centerLatLng)
         circleOptions.radius(radius)
         if(color != null) circleOptions.strokeColor(color)
-        mMap.addCircle(circleOptions)
+        var circle = mMap.addCircle(circleOptions)
+        return circle
     }
 
     /**
