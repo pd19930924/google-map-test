@@ -11,61 +11,45 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/add_default_marker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="@string/add_default_marker"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textAllCaps="false"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <Button
-            android:id="@+id/add_drawable_marker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="@string/add_drawable_marker"
-            android:textSize="16sp"
-            android:textAllCaps="false"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <Button
-            android:id="@+id/add_layout_marker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="@string/add_layout_marker"
-            android:textSize="16sp"
-            android:textAllCaps="false"/>
-
+        <include
+            layout="@layout/marker_linear_layout">
+        </include>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/circle_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:orientation="vertical"
         android:visibility="gone">
+        <include
+            layout="@layout/circle_linear_layout">
+        </include>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
+            android:id="@+id/switch_type"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:text="@string/switch_current_choice"
             android:textSize="16sp"
             android:gravity="center"/>
+
+        <Button
+            android:id="@+id/clear_all"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all"
+            android:textSize="16sp"
+            android:gravity="center" />
 
     </LinearLayout>
 
