@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">googleMapTest</string>
     <string name="title_activity_maps">Map</string>
-    
+
+    <!--used in testActivity-->
+    <string name="switch_current_choice">switch</string>
+    <string name="clear_all">clear all</string>
+
+    <!--used in marker_linear_layout-->
     <string name="add_default_marker">add default marker</string>
     <string name="add_drawable_marker">add drawable marker</string>
     <string name="add_layout_marker">add layout marker</string>
-    <string name="switch_current_choice">switch</string>
+
+    <!--used in circle_linear_layout-->
+    <string name="add_default_circle">add default circle</string>
+    <string name="add_drawable_circle">add drawable marker</string>
+
 </resources>
