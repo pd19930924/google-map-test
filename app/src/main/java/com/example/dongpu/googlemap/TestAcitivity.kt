@@ -136,6 +136,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         freeCameraMove = findViewById(R.id.free_camera_move)
 
         var cameraTest = CameraTest(baseGoogleMap)
+        cameraTest.context = applicationContext
         addZoomBtn.setOnClickListener { cameraTest.addZoom() }
         substractZoomBtn.setOnClickListener { cameraTest.subStractZoom() }
         forbidCameraMove.setOnClickListener { cameraTest.forbidCameraMove() }
