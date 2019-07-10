@@ -19,7 +19,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
     //test_activity
     private lateinit var switchTypeBtn : Button
-    private lateinit var clearAllBtn : Button
+    private lateinit var clearAllBtn : Button   //click this, we can clear all info in our map
 
     private var currentIndex = 0   //which linearLayout we are showing
     private var linearLayoutList = ArrayList<LinearLayout>()
@@ -48,9 +48,9 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.test_activity)
 
-        initView()
-        initMarkerView()
-        initCircleView()
+        initView() //init test_acitivity
+        initMarkerView()   //this is for marker test
+        initCircleView()   //this is for circle test
         val map = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
     }
@@ -76,6 +76,10 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
                 currentIndex = 0
                 linearLayoutList.get(currentIndex).visibility = View.VISIBLE
             }
+        }
+
+        clearAllBtn.setOnClickListener {
+            baseGoogleMap.clearAll()
         }
     }
 
