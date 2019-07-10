@@ -2,7 +2,10 @@ package com.example.dongpu.googlemap
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -14,9 +17,21 @@ import com.google.android.gms.maps.model.Marker
  */
 class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
-    private lateinit var addDefaultMarkerBtn : Button
+    //test_activity
+    private lateinit var switchTypeBtn : Button
+    private lateinit var clearAllBtn : Button
+
+    private var currentIndex = 0   //which linearLayout we are showing
+    private var linearLayoutList = ArrayList<LinearLayout>()
+
+    //marker_linear_layout
+    private lateinit var addDefaultMarkerBtn :  Button
     private lateinit var addDrawableMarkerBtn : Button
     private lateinit var addLayoutMarkerBtn : Button
+
+    //circle_linear_layout
+    private lateinit var addDefaultCircleBtn : Button
+    private lateinit var addDrawableCircleBtn : Button
 
     private lateinit var mMap: GoogleMap
     private lateinit var baseGoogleMap: BaseGoogleMap
@@ -34,30 +49,71 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         setContentView(R.layout.test_activity)
 
         initView()
+        initMarkerView()
+        initCircleView()
         val map = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
     }
 
     private fun initView(){
+        switchTypeBtn = findViewById(R.id.switch_type)
+        clearAllBtn = findViewById(R.id.clear_all)
+
+        var markerLinearLayout = findViewById<LinearLayout>(R.id.marker_linear_layout)
+        var circleLinearLayout = findViewById<LinearLayout>(R.id.circle_linear_layout)
+
+        linearLayoutList.add(markerLinearLayout)
+        linearLayoutList.add(circleLinearLayout)
+
+        switchTypeBtn.setOnClickListener {
+            linearLayoutList.get(currentIndex).visibility = View.GONE
+            if(currentIndex < linearLayoutList.size - 1){
+                var nextIndex = currentIndex+1
+                linearLayoutList.get(nextIndex).visibility = View.VISIBLE
+                currentIndex = nextIndex
+            }
+            else{
+                currentIndex = 0
+                linearLayoutList.get(currentIndex).visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun initMarkerView(){
         addDefaultMarkerBtn = findViewById(R.id.add_default_marker)
         addDrawableMarkerBtn = findViewById(R.id.add_drawable_marker)
         addLayoutMarkerBtn = findViewById(R.id.add_layout_marker)
 
         addDefaultMarkerBtn.setOnClickListener {
             lastMarker = null
-            baseGoogleMap.clear()
+            baseGoogleMap.clearMarkers()
             markerType = DEFAULT
             markerTest!!.addDefaulMarkers() }
         addDrawableMarkerBtn.setOnClickListener {
             lastMarker = null
-            baseGoogleMap.clear()
+            baseGoogleMap.clearMarkers()
             markerType = DRAWABLE
             markerTest!!.addDrawableMarkers() }
         addLayoutMarkerBtn.setOnClickListener {
             lastMarker = null
-            baseGoogleMap.clear()
+            baseGoogleMap.clearMarkers()
             markerType = LAYOUT
             markerTest!!.addLayoutMarkers() }
+    }
+
+    private fun initCircleView(){
+        addDefaultCircleBtn = findViewById(R.id.add_defualt_circle)
+        addDrawableCircleBtn = findViewById(R.id.add_drawable_circle)
+
+        var centerLatLng = LatLng(40.721270, -73.982380)
+
+        addDefaultCircleBtn.setOnClickListener {
+            baseGoogleMap.drawCircleOnMap(centerLatLng , radius1)
+        }
+
+        addDrawableCircleBtn.setOnClickListener {
+            baseGoogleMap.drawCircleOnMap(centerLatLng, radius2, resources.getColor(R.color.color_dog_blue))
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -108,5 +164,9 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         val DEFAULT = 0
         val DRAWABLE = 1
         val LAYOUT = 2
+
+        //circle radius
+        val radius1 = 180000.0
+        val radius2 = 220000.0
     }
 }

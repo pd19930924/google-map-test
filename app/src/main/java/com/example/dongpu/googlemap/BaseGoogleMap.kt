@@ -326,10 +326,20 @@ class BaseGoogleMap {
     }
 
     /**
+     * clear all markers, ignore the others
+     */
+    fun clearMarkers(){
+        for(marker in markerList){
+            marker.remove()
+        }
+        markerList.clear()
+    }
+
+    /**
      * clear all datas on map, we can use mMap.clear() to remove all markers
      * but also ,we need to clear our map list
      */
-    fun clear(){
+    fun clearAll(){
         markerList.clear()
         mMap.clear()
     }
