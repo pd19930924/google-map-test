@@ -20,6 +20,8 @@ class BaseGoogleMap {
 
     private lateinit var hideMarkerList : ArrayList<Marker>  //it is used to storage hide markers in case that we need to show some hide markers
 
+    private var forbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
+
     constructor(mMap: GoogleMap){
         this.mMap = mMap
         this.markerList = ArrayList<Marker>()
@@ -279,6 +281,7 @@ class BaseGoogleMap {
     fun forbidCameraMove(centerLatLng: LatLng){
         var mapBounds = LatLngBounds(centerLatLng, centerLatLng)
         mMap.setLatLngBoundsForCameraTarget(mapBounds)
+        forbidOrLimitCameraMovement = true
     }
 
     /**
@@ -290,12 +293,14 @@ class BaseGoogleMap {
     fun limitCameraMove(leftTopLatLng : LatLng, rightBottomLatLng : LatLng){
         var mapBounds = LatLngBounds(leftTopLatLng, rightBottomLatLng)
         mMap.setLatLngBoundsForCameraTarget(mapBounds)
+        forbidOrLimitCameraMovement = true
     }
 
     /**
      * This is used to free our camera move after using forbidCameraMove or limitCameraMove
      */
     fun freeCameraMove(){
+        if(!forbidOrLimitCameraMovement)return 
         mMap.setLatLngBoundsForCameraTarget(null)
     }
 
