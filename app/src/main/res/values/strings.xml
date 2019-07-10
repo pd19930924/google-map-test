@@ -15,4 +15,9 @@
     <string name="add_default_circle">add default circle</string>
     <string name="add_drawable_circle">add drawable marker</string>
 
+    <!--used in camera_linear_layout-->
+    <string name="add_zoom_1">add zoom(1F)</string>
+    <string name="substract_zoom_1">substract zoom(1F)</string>
+    <string name="forbid_camera_move">forbid camera move</string>
+    <string name="free_camera_move">free camera move</string>
 </resources>

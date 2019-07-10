@@ -6,6 +6,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import com.example.dongpu.googlemap.CircleTest.Companion.radius1
+import com.example.dongpu.googlemap.CircleTest.Companion.radius2
+import com.example.dongpu.googlemap.MarkerTest.Companion.DRAWABLE
+import com.example.dongpu.googlemap.MarkerTest.Companion.LAYOUT
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -33,6 +37,12 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
     private lateinit var addDefaultCircleBtn : Button
     private lateinit var addDrawableCircleBtn : Button
 
+    //camera_linear_layout
+    private lateinit var addZoomBtn : Button
+    private lateinit var substractZoomBtn : Button
+    private lateinit var forbidCameraMove : Button
+    private lateinit var freeCameraMove : Button
+
     private lateinit var mMap: GoogleMap
     private lateinit var baseGoogleMap: BaseGoogleMap
 
@@ -48,11 +58,9 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.test_activity)
 
-        initView() //init test_acitivity
-        initMarkerView()   //this is for marker test
-        initCircleView()   //this is for circle test
         val map = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
+        initView() //init test_acitivity
     }
 
     private fun initView(){
@@ -61,9 +69,11 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         var markerLinearLayout = findViewById<LinearLayout>(R.id.marker_linear_layout)
         var circleLinearLayout = findViewById<LinearLayout>(R.id.circle_linear_layout)
+        var cameraLinearLayout = findViewById<LinearLayout>(R.id.camera_linear_layout)
 
         linearLayoutList.add(markerLinearLayout)
         linearLayoutList.add(circleLinearLayout)
+        linearLayoutList.add(cameraLinearLayout)
 
         switchTypeBtn.setOnClickListener {
             linearLayoutList.get(currentIndex).visibility = View.GONE
@@ -111,13 +121,24 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         var centerLatLng = LatLng(40.721270, -73.982380)
 
-        addDefaultCircleBtn.setOnClickListener {
-            baseGoogleMap.drawCircleOnMap(centerLatLng , radius1)
-        }
+        var circleTest = CircleTest(baseGoogleMap)
 
-        addDrawableCircleBtn.setOnClickListener {
-            baseGoogleMap.drawCircleOnMap(centerLatLng, radius2, resources.getColor(R.color.color_dog_blue))
-        }
+        addDefaultCircleBtn.setOnClickListener {circleTest.drawDefaultCircle() }
+
+        addDrawableCircleBtn.setOnClickListener {circleTest.drawDrawableCircle(resources.getColor(R.color.color_dog_blue)) }
+    }
+
+    private fun initCameraView(){
+        addZoomBtn = findViewById(R.id.add_zoom_1)
+        substractZoomBtn = findViewById(R.id.substract_zoom_1)
+        forbidCameraMove = findViewById(R.id.forbid_camera_move)
+        freeCameraMove = findViewById(R.id.free_camera_move)
+
+        var cameraTest = CameraTest(baseGoogleMap)
+        addZoomBtn.setOnClickListener { cameraTest.addZoom() }
+        substractZoomBtn.setOnClickListener { cameraTest.subStractZoom() }
+        forbidCameraMove.setOnClickListener { cameraTest.forbidCameraMove() }
+        freeCameraMove.setOnClickListener { cameraTest.freeCameraMove() }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -127,8 +148,14 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         initLatLng()
         initMap()
+
+        //this is for marker test
         initMarkerTest()
+        initMarkerView()
         initMarkerClick()
+
+        initCircleView()   //this is for circle test
+        initCameraView()   //this is for camera test
     }
 
     private fun initMap(){
@@ -168,9 +195,5 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         val DEFAULT = 0
         val DRAWABLE = 1
         val LAYOUT = 2
-
-        //circle radius
-        val radius1 = 180000.0
-        val radius2 = 220000.0
     }
 }
