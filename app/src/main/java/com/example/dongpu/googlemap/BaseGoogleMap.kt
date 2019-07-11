@@ -8,11 +8,12 @@ import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import java.util.*
 
 /**
  * Created by dong.pu on 2019/6/26.
  */
-class BaseGoogleMap {
+class BaseGoogleMap : Cloneable {
 
     private lateinit var mMap : GoogleMap
 
@@ -180,48 +181,72 @@ class BaseGoogleMap {
 
     /**
      * remove existing marker
-     * @param latLng
+     * @param index
      */
-    fun removeMarker(latLng : LatLng){
-        var currentMarker : Marker? = null
-        for(marker in markerList){
-            var mLatLng = marker.position  //get latLng
-            if(mLatLng.equals(latLng)){
-                currentMarker = marker
-                break
-            }
+    fun removeMarker(index: Int) : Marker?{
+        if(markerList.size < index){
+            Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
+            return null
         }
-        //if currentMarker is null , it means that we does not have the marker
-        if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
-        else {
-            currentMarker.remove()
-            markerList.remove(currentMarker)
-        }
+        var currentMarker = markerList.get(index)
+        var removedMarker = markerClone(currentMarker)
+        currentMarker.remove()
+        markerList.removeAt(index)
+        return removedMarker
     }
 
     /**
      * remove existing marker
-     * @param index
+     * @param latLng
      */
-    fun removeMarker(index: Int){
-        if(markerList.size < index){
-            Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
-            return
+    fun removeMarker(latLng : LatLng) : Marker?{
+        var currentMarker : Marker? = null
+        var removedMarker : Marker? = null   //marker we already removed
+        var index = 0
+        for(marker in markerList){
+            var mLatLng = marker.position  //get latLng
+            if(mLatLng.equals(latLng)){
+                currentMarker = marker
+                removedMarker = markerClone(currentMarker)
+                currentMarker.remove()
+                //here we don't use markerList.remove,
+                //because it will search all datas to judge which data is the marker we need
+                markerList.removeAt(index)
+                break
+            }
+            index++
         }
-        var marker = markerList.get(index)
-        marker.remove()
-        markerList.remove(marker)
+        //if currentMarker is null , it means that we does not have the marker
+        if(currentMarker == null){
+            Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
+            return null
+        }
+        return removedMarker
     }
 
     /**
      * @param marker we use exist marker to remove the marker
      */
-    fun removeMarker(marker: Marker){
-        if(!markerList.contains(marker)) Log.e(TAG, MARKET_NOT_EXIST_ERROR)
-        else{
-            marker.remove()
-            markerList.remove(marker)
+    fun removeMarker(marker: Marker) : Marker?{
+        var currentMarker : Marker? = null
+        var removedMarker : Marker? = null
+        var index = 0
+        for(cMarker in markerList){
+            if(cMarker.equals(marker)){
+                currentMarker = marker
+                removedMarker = markerClone(marker)
+                currentMarker.remove()
+                //here we don't use markerLiskt.remove,
+                //because it will search all datas to judge which data is the marker we need
+                markerList.removeAt(index)
+            }
+            index++
         }
+        if(currentMarker == null){
+            Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+            return null
+        }
+        return removedMarker
     }
 
     /**
@@ -394,6 +419,17 @@ class BaseGoogleMap {
         view.draw(canvas)
 
         return r
+    }
+
+    //clone our marker
+    private fun markerClone(marker: Marker) : Marker?{
+        var newMarker : Marker? = null
+        try {
+            var newMarker = super.clone() as Marker
+        }catch (e : CloneNotSupportedException){
+            e.printStackTrace()
+        }
+        return newMarker
     }
 
     companion object {
