@@ -139,7 +139,7 @@ class BaseGoogleMap : Cloneable {
      * hide the marker, we need to search all markers to hide the marker
      * @param latLng
      */
-    fun hideMarker(latLng: LatLng){
+    fun hideMarker(latLng: LatLng) : Marker?{
         var currentMarker : Marker? = null
         for(marker in markerList){
             var mLatLng = marker.position  //get latLng
@@ -149,10 +149,14 @@ class BaseGoogleMap : Cloneable {
             }
         }
         //if currentMarker is null , it means that we does not have the marker
-        if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
+        if(currentMarker == null){
+            Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
+            return null
+        }
         else{
             currentMarker.isVisible = false
             hideMarkerList.add(currentMarker)  //set hidemMarkerList
+            return currentMarker
         }
     }
 
@@ -161,22 +165,27 @@ class BaseGoogleMap : Cloneable {
      * and we can avoid searching all markers
      * @param index it is which index of our marker
      */
-    fun hideMarker(index : Int){
+    fun hideMarker(index : Int) : Marker?{
         if(markerList.size < index){
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
-            return
+            return null
         }
         var marker = markerList.get(index)
         marker.isVisible = false
         hideMarkerList.add(marker)   //set hidemMarkerList
+        return marker
     }
 
     /**
      * @param marker we use exist marker to hide the marker
      */
-    fun hideMarker(marker: Marker){
-        if(!markerList.contains(marker)) Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+    fun hideMarker(marker: Marker) : Marker?{
+        if(!markerList.contains(marker)) {
+            Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+            return null
+        }
         else hideMarkerList.add(marker)
+        return marker
     }
 
     /**
