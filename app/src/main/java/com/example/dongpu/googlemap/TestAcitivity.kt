@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import com.example.dongpu.googlemap.cluster_test.ClusterTest
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -38,8 +39,13 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var forbidCameraMove : Button
     private lateinit var freeCameraMove : Button
 
+    private lateinit var clusterBtn : Button
+
+    //for map
     private lateinit var mMap: GoogleMap
     private lateinit var baseGoogleMap: BaseGoogleMap
+
+
 
     private var latLngList = ArrayList<LatLng>()
 
@@ -63,10 +69,12 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         var markerLinearLayout = findViewById<LinearLayout>(R.id.marker_linear_layout)
         var circleLinearLayout = findViewById<LinearLayout>(R.id.circle_linear_layout)
         var cameraLinearLayout = findViewById<LinearLayout>(R.id.camera_linear_layout)
+        var clusterLinearLayout = findViewById<LinearLayout>(R.id.cluster_linear_layout)
 
         linearLayoutList.add(markerLinearLayout)
         linearLayoutList.add(circleLinearLayout)
         linearLayoutList.add(cameraLinearLayout)
+        linearLayoutList.add(clusterLinearLayout)
 
         switchTypeBtn.setOnClickListener {
             linearLayoutList.get(currentIndex).visibility = View.GONE
@@ -141,6 +149,19 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         freeCameraMove.setOnClickListener { cameraTest.freeCameraMove() }
     }
 
+    private fun initClusterTest(){
+        clusterBtn = findViewById(R.id.cluster)
+        var clusterTest = ClusterTest(applicationContext, mMap)
+
+        clusterBtn.setOnClickListener {
+            baseGoogleMap.clearMarkers()  //clear all markers
+            baseGoogleMap.addMarkersToMap(latLngList)   //add new markers
+            baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //move camera to center
+            clusterTest.clustering(baseGoogleMap.getMarkerList())
+            baseGoogleMap.setCameraZoom(2f)
+        }
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -153,6 +174,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         initMarkerTest()   //this is for marker test
         initCircleTest()   //this is for circle test
         initCameraTest()   //this is for camera test
+        initClusterTest()  //this is for cluster test
     }
 
     private fun initMap(){

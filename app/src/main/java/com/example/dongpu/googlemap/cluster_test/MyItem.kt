@@ -1,4 +1,4 @@
-package com.example.dongpu.googlemap
+package com.example.dongpu.googlemap.cluster_test
 
 import android.provider.ContactsContract
 import android.support.v7.widget.DialogTitle
