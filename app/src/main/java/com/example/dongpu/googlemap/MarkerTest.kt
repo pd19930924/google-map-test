@@ -101,7 +101,7 @@ class MarkerTest {
     }
 
     fun initMarkerClick(onMarkerClickListener: GoogleMap.OnMarkerClickListener){
-        var mMap = baseGoogleMap.get_mMap()
+        var mMap = baseGoogleMap.getGoogleMap()
         mMap.setOnMarkerClickListener(onMarkerClickListener)
     }
 

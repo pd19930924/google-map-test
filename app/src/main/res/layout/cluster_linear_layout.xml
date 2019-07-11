@@ -4,13 +4,27 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/cluster"
+        android:id="@+id/start_cluster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:text="@string/cluster"
         android:gravity="center"
-        android:textSize="16sp"
-        android:textAllCaps="false"/>
+        android:text="@string/start_cluster"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/stop_cluster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/stop_cluster"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
 
 </LinearLayout>

@@ -1,13 +1,16 @@
 package com.example.dongpu.googlemap
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.View
+import com.example.dongpu.googlemap.cluster_test.MyItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.clustering.ClusterManager
 import java.util.*
 
 /**
@@ -21,7 +24,10 @@ class BaseGoogleMap : Cloneable {
 
     private lateinit var hideMarkerList : ArrayList<Marker>  //it is used to storage hide markers in case that we need to show some hide markers
 
-    private var forbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
+    private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
+
+    private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
+    private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
 
     constructor(mMap: GoogleMap){
         this.mMap = mMap
@@ -314,7 +320,7 @@ class BaseGoogleMap : Cloneable {
     fun forbidCameraMove(centerLatLng: LatLng){
         var mapBounds = LatLngBounds(centerLatLng, centerLatLng)
         mMap.setLatLngBoundsForCameraTarget(mapBounds)
-        forbidOrLimitCameraMovement = true
+        isForbidOrLimitCameraMovement = true
     }
 
     /**
@@ -326,14 +332,14 @@ class BaseGoogleMap : Cloneable {
     fun limitCameraMove(leftTopLatLng : LatLng, rightBottomLatLng : LatLng){
         var mapBounds = LatLngBounds(leftTopLatLng, rightBottomLatLng)
         mMap.setLatLngBoundsForCameraTarget(mapBounds)
-        forbidOrLimitCameraMovement = true
+        isForbidOrLimitCameraMovement = true
     }
 
     /**
      * This is used to free our camera move after using forbidCameraMove or limitCameraMove
      */
     fun freeCameraMove(){
-        if(!forbidOrLimitCameraMovement)return 
+        if(!isForbidOrLimitCameraMovement)return
         mMap.setLatLngBoundsForCameraTarget(null)
     }
 
@@ -394,7 +400,7 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
-     * clear all datas on map, we can use mMap.clear() to remove all markers
+     * clear all datas on map(markers, circles , lines), we can use mMap.clear() to remove all markers
      * but also ,we need to clear our map list
      */
     fun clearAll(){
@@ -406,8 +412,41 @@ class BaseGoogleMap : Cloneable {
      * return our google map
      * @return googleMap
      */
-    fun get_mMap() : GoogleMap{
+    fun getGoogleMap() : GoogleMap{
         return mMap
+    }
+
+    /**
+     * open our cluster function
+     * @param context
+     * @param showAnimation do you want to see the animation? default value is false
+     */
+    fun startCluster(context : Context, showAnimation : Boolean = false){
+        clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
+        clusterManger.setAnimation(showAnimation)
+        var index = 0
+        for(marker in markerList){
+            var myItem = MyItem(marker.position, marker.title, marker.snippet)
+            clusterManger.addItem(myItem)
+            hideMarker(index)
+            index++
+        }
+        mMap.setOnCameraIdleListener(clusterManger)
+        isStartCluster = true
+    }
+
+    /**
+     * close our cluster function
+     */
+    fun stopCluster(){
+        var index = 0
+        for(marker in markerList){
+            showMarker(index)
+            index++
+        }
+        clusterManger.clearItems()
+        clusterManger.setAnimation(false)
+        isStartCluster = false
     }
 
     override fun clone(): Any {
