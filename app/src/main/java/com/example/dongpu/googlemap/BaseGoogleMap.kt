@@ -191,22 +191,25 @@ class BaseGoogleMap : Cloneable {
     /**
      * remove existing marker
      * @param index
+     * @return remove successfully or not
      */
-    fun removeMarker(index: Int){
+    fun removeMarker(index: Int) : Boolean{
         if(markerList.size < index){
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
-            return
+            return false
         }
         var currentMarker = markerList.get(index)
         currentMarker.remove()
         markerList.removeAt(index)
+        return true
     }
 
     /**
      * remove existing marker
      * @param latLng
+     * @return remove successfully or not
      */
-    fun removeMarker(latLng : LatLng){
+    fun removeMarker(latLng : LatLng) : Boolean{
         var currentMarker : Marker? = null
         var index = 0
         for(marker in markerList){
@@ -224,13 +227,16 @@ class BaseGoogleMap : Cloneable {
         //if currentMarker is null , it means that we does not have the marker
         if(currentMarker == null){
             Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
+            return false
         }
+        return true
     }
 
     /**
      * @param marker we use exist marker to remove the marker
+     * @param remove successfully or not
      */
-    fun removeMarker(marker: Marker){
+    fun removeMarker(marker: Marker) : Boolean{
         var currentMarker : Marker? = null
         var index = 0
         for(cMarker in markerList){
@@ -246,7 +252,9 @@ class BaseGoogleMap : Cloneable {
         }
         if(currentMarker == null){
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+            return false
         }
+        return true
     }
 
     /**
@@ -402,7 +410,21 @@ class BaseGoogleMap : Cloneable {
         return mMap
     }
 
-    //paint a special bitmap pic form layout for marker icon
+    override fun clone(): Any {
+        var baseGoogleMap : BaseGoogleMap? = null
+        try {
+            baseGoogleMap = super.clone() as BaseGoogleMap
+            return baseGoogleMap
+        }catch (e : Exception){
+            e.printStackTrace()
+            return Any()
+        }
+    }
+
+    /**
+     * paint a special bitmap pic form layout for marker icon
+     * @param view our view that we want to show
+     */
     fun createBitmapFromView(view : View) : Bitmap {
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         view.measure(measureSpec, measureSpec)
