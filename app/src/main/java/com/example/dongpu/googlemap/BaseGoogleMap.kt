@@ -444,6 +444,7 @@ class BaseGoogleMap : Cloneable {
             showMarker(index)
             index++
         }
+        clusterManger.clusterMarkerCollection.clear()  //clear all cluster info, we need this ,or the cluster circle will not clear
         clusterManger.clearItems()
         clusterManger.setAnimation(false)
         isStartCluster = false
