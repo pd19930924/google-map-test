@@ -22,5 +22,6 @@
     <string name="free_camera_move">free camera move</string>
 
     <!--used in cluster_linear_layout-->
-    <string name="cluster">cluster</string>
+    <string name="start_cluster">start cluster</string>
+    <string name="stop_cluster">stop cluster</string>
 </resources>

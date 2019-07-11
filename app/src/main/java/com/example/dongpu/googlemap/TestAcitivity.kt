@@ -39,7 +39,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var forbidCameraMove : Button
     private lateinit var freeCameraMove : Button
 
-    private lateinit var clusterBtn : Button
+    private lateinit var startClusterBtn : Button
+    private lateinit var stopClusterBtn : Button
 
     //for map
     private lateinit var mMap: GoogleMap
@@ -150,14 +151,17 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     private fun initClusterTest(){
-        clusterBtn = findViewById(R.id.cluster)
-        var clusterTest = ClusterTest(applicationContext, mMap)
+        startClusterBtn = findViewById(R.id.start_cluster)
+        stopClusterBtn = findViewById(R.id.stop_cluster)
+        var clusterTest = ClusterTest(applicationContext, baseGoogleMap)
 
-        clusterBtn.setOnClickListener {
+        startClusterBtn.setOnClickListener {
             baseGoogleMap.clearMarkers()  //clear all markers
             baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //move camera to center
-            clusterTest.clustering()
+            clusterTest.startCluster()
         }
+
+        stopClusterBtn.setOnClickListener { clusterTest.stopCluster() }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

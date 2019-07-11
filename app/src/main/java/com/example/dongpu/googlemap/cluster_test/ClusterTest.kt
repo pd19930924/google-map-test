@@ -1,6 +1,7 @@
 package com.example.dongpu.googlemap.cluster_test
 
 import android.content.Context
+import com.example.dongpu.googlemap.BaseGoogleMap
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
@@ -12,20 +13,18 @@ import com.google.maps.android.clustering.ClusterManager
  */
 class ClusterTest {
     //This is main function for clusting
-    private lateinit var clusterManager : ClusterManager<MyItem>
     private lateinit var context: Context
-    private lateinit var mMap: GoogleMap
+    private lateinit var baseGoogleMap: BaseGoogleMap
 
-    constructor(context: Context, mMap : GoogleMap){
+    constructor(context: Context, baseGoogleMap: BaseGoogleMap){
         this.context = context
-        this.mMap = mMap
-        this.clusterManager = ClusterManager<MyItem>(context, mMap)
+        this.baseGoogleMap = baseGoogleMap
     }
 
 
     //Here is an example of clustering
     //this example is come from google
-    fun clustering(){
+    fun startCluster(){
         var lat = 40.721270
         var lng = -73.982380
         var i = 0
@@ -33,10 +32,13 @@ class ClusterTest {
             var offset = i/60.0
             lat = lat+offset
             lng = lng+offset
-            var myItem = MyItem(LatLng(lat,lng))
-            clusterManager!!.addItem(myItem)
+            baseGoogleMap.addMarkerToMap(LatLng(lat, lng))
             i++
         }
-        mMap.setOnCameraIdleListener(clusterManager)
+        baseGoogleMap.startCluster(context)
+    }
+
+    fun stopCluster(){
+        baseGoogleMap.stopCluster()
     }
 }
