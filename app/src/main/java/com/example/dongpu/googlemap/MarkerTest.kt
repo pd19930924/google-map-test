@@ -66,7 +66,7 @@ class MarkerTest {
     fun addLayoutMarkers(){
         //here we use marker.title to store our data in view
         for(latLng in latLngList){
-            var view = LayoutInflater.from(context).inflate(R.layout.fuel_price_layout, null)
+            var view = LayoutInflater.from(context).inflate(R.layout.value_layout, null)
             var value = view.findViewById<TextView>(R.id.value)
             var background = view.findViewById<LinearLayout>(R.id.background)
             value.text = "value"
@@ -81,7 +81,7 @@ class MarkerTest {
         }else{
             if(lastMarker!!.equals(marker)) return
             lastMarker!!.zIndex = 0f
-            var view = LayoutInflater.from(context).inflate(R.layout.fuel_price_layout, null)
+            var view = LayoutInflater.from(context).inflate(R.layout.value_layout, null)
             var value = view.findViewById<TextView>(R.id.value)
             var background = view.findViewById<LinearLayout>(R.id.background)
             value.text = lastMarker!!.title  //because we build a new view, so we need to use our title to restore the value
@@ -90,7 +90,7 @@ class MarkerTest {
             lastMarker!!.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
             lastMarker = marker
         }
-        var view = LayoutInflater.from(context).inflate(R.layout.fuel_price_layout, null)
+        var view = LayoutInflater.from(context).inflate(R.layout.value_layout, null)
         var value = view.findViewById<TextView>(R.id.value)
         var background = view.findViewById<LinearLayout>(R.id.background)
         value.text = marker.title
