@@ -192,31 +192,27 @@ class BaseGoogleMap : Cloneable {
      * remove existing marker
      * @param index
      */
-    fun removeMarker(index: Int) : Marker?{
+    fun removeMarker(index: Int){
         if(markerList.size < index){
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
-            return null
+            return
         }
         var currentMarker = markerList.get(index)
-        var removedMarker = markerClone(currentMarker)
         currentMarker.remove()
         markerList.removeAt(index)
-        return removedMarker
     }
 
     /**
      * remove existing marker
      * @param latLng
      */
-    fun removeMarker(latLng : LatLng) : Marker?{
+    fun removeMarker(latLng : LatLng){
         var currentMarker : Marker? = null
-        var removedMarker : Marker? = null   //marker we already removed
         var index = 0
         for(marker in markerList){
             var mLatLng = marker.position  //get latLng
             if(mLatLng.equals(latLng)){
                 currentMarker = marker
-                removedMarker = markerClone(currentMarker)
                 currentMarker.remove()
                 //here we don't use markerList.remove,
                 //because it will search all datas to judge which data is the marker we need
@@ -228,34 +224,29 @@ class BaseGoogleMap : Cloneable {
         //if currentMarker is null , it means that we does not have the marker
         if(currentMarker == null){
             Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
-            return null
         }
-        return removedMarker
     }
 
     /**
      * @param marker we use exist marker to remove the marker
      */
-    fun removeMarker(marker: Marker) : Marker?{
+    fun removeMarker(marker: Marker){
         var currentMarker : Marker? = null
-        var removedMarker : Marker? = null
         var index = 0
         for(cMarker in markerList){
             if(cMarker.equals(marker)){
                 currentMarker = marker
-                removedMarker = markerClone(marker)
                 currentMarker.remove()
                 //here we don't use markerLiskt.remove,
                 //because it will search all datas to judge which data is the marker we need
                 markerList.removeAt(index)
+                break
             }
             index++
         }
         if(currentMarker == null){
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
-            return null
         }
-        return removedMarker
     }
 
     /**
@@ -428,17 +419,6 @@ class BaseGoogleMap : Cloneable {
         view.draw(canvas)
 
         return r
-    }
-
-    //clone our marker
-    private fun markerClone(marker: Marker) : Marker?{
-        var newMarker : Marker? = null
-        try {
-            var newMarker = super.clone() as Marker
-        }catch (e : CloneNotSupportedException){
-            e.printStackTrace()
-        }
-        return newMarker
     }
 
     companion object {
