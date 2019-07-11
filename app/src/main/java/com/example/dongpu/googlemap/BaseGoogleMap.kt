@@ -369,6 +369,14 @@ class BaseGoogleMap {
         mMap.clear()
     }
 
+    /**
+     * return our google map
+     * @return googleMap
+     */
+    fun get_mMap() : GoogleMap{
+        return mMap
+    }
+
     //paint a special bitmap pic form layout for marker icon
     fun createBitmapFromView(view : View) : Bitmap {
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
