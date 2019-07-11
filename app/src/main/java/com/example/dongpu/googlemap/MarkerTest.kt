@@ -100,15 +100,9 @@ class MarkerTest {
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(baseGoogleMap.createBitmapFromView(view)))
     }
 
-    fun initMarkerClick(mMap : GoogleMap, markerType : Int){
-        mMap.setOnMarkerClickListener {
-            when(markerType){
-                DEFAULT -> clickDefaultMarker(it)
-                DRAWABLE -> clickDrawableMarker(it)
-                LAYOUT -> clickLayoutMarker(it)
-            }
-            true
-        }
+    fun initMarkerClick(onMarkerClickListener: GoogleMap.OnMarkerClickListener){
+        var mMap = baseGoogleMap.get_mMap()
+        mMap.setOnMarkerClickListener(onMarkerClickListener)
     }
 
     companion object {

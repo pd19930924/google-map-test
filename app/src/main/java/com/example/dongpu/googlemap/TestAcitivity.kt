@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.Marker
 /**
  * Created by dong.pu on 2019/6/25.
  */
-class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
+class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
 
     //test_activity
     private lateinit var switchTypeBtn : Button
@@ -88,7 +88,10 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         }
     }
 
-    private fun initMarkerView(){
+    private fun initMarkerTest(){
+        markerTest = MarkerTest(baseGoogleMap,applicationContext)
+        markerTest!!.latLngList = latLngList
+
         addDefaultMarkerBtn = findViewById(R.id.add_default_marker)
         addDrawableMarkerBtn = findViewById(R.id.add_drawable_marker)
         addLayoutMarkerBtn = findViewById(R.id.add_layout_marker)
@@ -108,9 +111,11 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
             baseGoogleMap.clearMarkers()
             markerType = LAYOUT
             markerTest!!.addLayoutMarkers() }
+
+        markerTest!!.initMarkerClick(this)
     }
 
-    private fun initCircleView(){
+    private fun initCircleTest(){
         addDefaultCircleBtn = findViewById(R.id.add_defualt_circle)
         addDrawableCircleBtn = findViewById(R.id.add_drawable_circle)
 
@@ -124,7 +129,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         addDrawableCircleBtn.setOnClickListener {circleTest.drawDrawableCircle(resources.getColor(R.color.color_dog_blue)) }
     }
 
-    private fun initCameraView(){
+    private fun initCameraTest(){
         addZoomBtn = findViewById(R.id.add_zoom_1)
         substractZoomBtn = findViewById(R.id.substract_zoom_1)
         forbidCameraMove = findViewById(R.id.forbid_camera_move)
@@ -143,26 +148,18 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
 
         baseGoogleMap = BaseGoogleMap(mMap)
 
+        //init our map info
         initLatLng()
         initMap()
 
-        //this is for marker test
-        initMarkerTest()
-        initMarkerView()
-        initMarkerClick()
-
-        initCircleView()   //this is for circle test
-        initCameraView()   //this is for camera test
+        initMarkerTest()   //this is for marker test
+        initCircleTest()   //this is for circle test
+        initCameraTest()   //this is for camera test
     }
 
     private fun initMap(){
         baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //at first, we move our camera to 40.721270, -73.982380(in New York)
-        baseGoogleMap.setCameraZoom(6F)   //at first, we set zoom at the level of continent
-    }
-
-    private fun initMarkerTest(){
-        markerTest = MarkerTest(baseGoogleMap,applicationContext)
-        markerTest!!.latLngList = latLngList
+        baseGoogleMap.setCameraZoom(1F)   //at first, we set zoom at the level of continent
     }
 
     private fun initLatLng(){
@@ -176,15 +173,13 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback{
         latLngList.add(latLng4)
     }
 
-    private fun initMarkerClick(){
-        mMap.setOnMarkerClickListener {
-            when(markerType){
-                DEFAULT -> markerTest!!.clickDefaultMarker(it)
-                DRAWABLE -> markerTest!!.clickDrawableMarker(it)
-                LAYOUT -> markerTest!!.clickLayoutMarker(it)
-            }
-            true
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        when(markerType){
+            DEFAULT -> markerTest!!.clickDefaultMarker(marker!!)
+            DRAWABLE -> markerTest!!.clickDrawableMarker(marker!!)
+            LAYOUT -> markerTest!!.clickLayoutMarker(marker!!)
         }
+        return true
     }
 
     companion object {
