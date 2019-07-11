@@ -155,10 +155,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
 
         clusterBtn.setOnClickListener {
             baseGoogleMap.clearMarkers()  //clear all markers
-            baseGoogleMap.addMarkersToMap(latLngList)   //add new markers
             baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //move camera to center
-            clusterTest.clustering(baseGoogleMap.getMarkerList())
-            baseGoogleMap.setCameraZoom(2f)
+            clusterTest.clustering()
         }
     }
 

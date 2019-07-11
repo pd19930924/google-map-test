@@ -1,12 +1,9 @@
 package com.example.dongpu.googlemap.cluster_test
 
-import android.content.ClipData
 import android.content.Context
-import com.example.dongpu.googlemap.BaseGoogleMap
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
-import java.nio.channels.FileChannel
 
 /**
  * Created by dong.pu on 2019/7/11.
@@ -25,14 +22,21 @@ class ClusterTest {
         this.clusterManager = ClusterManager<MyItem>(context, mMap)
     }
 
-    /**
-     * Here is an example of clustering
-     * @param markerList that we are using
-     */
-    fun clustering(markerList: List<Marker>){
-        for(marker in markerList){
-            var myItem = MyItem(marker.position)
-            clusterManager.addItem(myItem)
+
+    //Here is an example of clustering
+    //this example is come from google
+    fun clustering(){
+        var lat = 40.721270
+        var lng = -73.982380
+        var i = 0
+        while(i<10){
+            var offset = i/60.0
+            lat = lat+offset
+            lng = lng+offset
+            var myItem = MyItem(LatLng(lat,lng))
+            clusterManager!!.addItem(myItem)
+            i++
         }
+        mMap.setOnCameraIdleListener(clusterManager)
     }
 }
