@@ -105,6 +105,11 @@ class MarkerTest {
         mMap.setOnMarkerClickListener(onMarkerClickListener)
     }
 
+    //if we change our marker type , we need clearing our lastmarker info , or it will break
+    fun clearLastMarker(){
+        lastMarker = null
+    }
+
     companion object {
         //which kind of marker we are shoing
         val DEFAULT = 0

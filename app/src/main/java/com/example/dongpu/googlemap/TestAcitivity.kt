@@ -43,8 +43,6 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
 
     private var latLngList = ArrayList<LatLng>()
 
-    private var lastMarker : Marker? = null
-
     private var markerType : Int = -1
 
     private var markerTest : MarkerTest? = null
@@ -97,17 +95,17 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         addLayoutMarkerBtn = findViewById(R.id.add_layout_marker)
 
         addDefaultMarkerBtn.setOnClickListener {
-            lastMarker = null
+            markerTest!!.clearLastMarker()
             baseGoogleMap.clearMarkers()
             markerType = DEFAULT
             markerTest!!.addDefaulMarkers() }
         addDrawableMarkerBtn.setOnClickListener {
-            lastMarker = null
+            markerTest!!.clearLastMarker()
             baseGoogleMap.clearMarkers()
             markerType = DRAWABLE
             markerTest!!.addDrawableMarkers() }
         addLayoutMarkerBtn.setOnClickListener {
-            lastMarker = null
+            markerTest!!.clearLastMarker()
             baseGoogleMap.clearMarkers()
             markerType = LAYOUT
             markerTest!!.addLayoutMarkers() }
@@ -159,7 +157,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
 
     private fun initMap(){
         baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //at first, we move our camera to 40.721270, -73.982380(in New York)
-        baseGoogleMap.setCameraZoom(1F)   //at first, we set zoom at the level of continent
+        baseGoogleMap.setCameraZoom(5F)   //at first, we set zoom at the level of continent
     }
 
     private fun initLatLng(){
