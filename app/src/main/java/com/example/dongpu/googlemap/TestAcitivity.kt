@@ -2,14 +2,9 @@ package com.example.dongpu.googlemap
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import com.example.dongpu.googlemap.CircleTest.Companion.radius1
-import com.example.dongpu.googlemap.CircleTest.Companion.radius2
-import com.example.dongpu.googlemap.MarkerTest.Companion.DRAWABLE
-import com.example.dongpu.googlemap.MarkerTest.Companion.LAYOUT
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
