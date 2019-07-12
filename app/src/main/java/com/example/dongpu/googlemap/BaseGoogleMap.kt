@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.View
-import com.example.dongpu.googlemap.cluster_test.MyItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -445,8 +444,12 @@ class BaseGoogleMap : Cloneable {
      * open our cluster function
      * @param context
      * @param showAnimation do you want to see the animation? default value is false
+     * @param onMarkerClickListener what do you want to do when you click marker
      */
-    fun startCluster(context : Context, showAnimation : Boolean = false){
+    @JvmOverloads
+    fun startCluster(context : Context, showAnimation : Boolean = false,
+                     onClusterClickListener: ClusterManager.OnClusterClickListener<MyItem>? = null,
+                     onMarkerClickListener: GoogleMap.OnMarkerClickListener? = null){
         if(isStartCluster)return
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
         clusterManger.setAnimation(showAnimation)
@@ -462,6 +465,9 @@ class BaseGoogleMap : Cloneable {
         clusterManger.renderer = myItemRenderer
         mMap.setOnCameraIdleListener(clusterManger)
         mMap.setOnMarkerClickListener(clusterManger)
+
+        clusterManger.setOnClusterClickListener(onClusterClickListener)
+        clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
         //with a small movement, we will make the cluster begin to work
         setCameraZoom(getZoom() + 0.0001F)
         setCameraZoom(getZoom() - 0.0001F)
