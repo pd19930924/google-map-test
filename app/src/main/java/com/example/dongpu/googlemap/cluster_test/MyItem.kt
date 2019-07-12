@@ -1,8 +1,13 @@
 package com.example.dongpu.googlemap.cluster_test
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.provider.ContactsContract
 import android.support.v7.widget.DialogTitle
+import com.example.dongpu.googlemap.R
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.ClusterItem
 
 /**
@@ -14,11 +19,10 @@ class MyItem : ClusterItem{
     private var mSnippet : String? = null
     private var mTitle : String? = null
 
-    @JvmOverloads
-    constructor(latLng : LatLng, title: String? = null, snippet : String? = null){
-        this.mPosition = latLng
-        this.mTitle = title
-        this.mSnippet = snippet
+    constructor(marker: Marker){
+        this.mPosition = marker.position
+        this.mTitle = marker.title
+        this.mSnippet = marker.snippet
     }
 
     override fun getPosition(): LatLng {
