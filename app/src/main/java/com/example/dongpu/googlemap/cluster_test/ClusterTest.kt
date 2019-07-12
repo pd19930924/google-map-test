@@ -21,7 +21,6 @@ class ClusterTest {
         this.baseGoogleMap = baseGoogleMap
     }
 
-
     //Here is an example of clustering
     //this example is come from google
     fun startDefaultCluster(){
