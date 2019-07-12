@@ -450,7 +450,7 @@ class BaseGoogleMap : Cloneable {
     fun startCluster(context : Context, showAnimation : Boolean = false,
                      onClusterClickListener: ClusterManager.OnClusterClickListener<MyItem>? = null,
                      onMarkerClickListener: GoogleMap.OnMarkerClickListener? = null){
-        if(isStartCluster)return
+        if(isStartCluster)return   //if we have started cluster, will will never start it again
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
         clusterManger.setAnimation(showAnimation)
 
@@ -478,7 +478,7 @@ class BaseGoogleMap : Cloneable {
      * close our cluster function
      */
     fun stopCluster(){
-        if(isStartCluster == false)return
+        if(isStartCluster == false)return  //if we have closed cluster, will will never close it again
         var index = 0
         for(marker in markerList){
             showMarker(index)
