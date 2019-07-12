@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -36,6 +35,7 @@ class BaseGoogleMap : Cloneable {
     constructor(mMap: GoogleMap){
         this.mMap = mMap
         this.markerList = ArrayList<Marker>()
+        this.markerOptionsList = ArrayList<MarkerOptions>()
         this.hideMarkerList = ArrayList<Marker>()
     }
 
@@ -518,7 +518,7 @@ class BaseGoogleMap : Cloneable {
 
     companion object {
         val TAG = "BaseGoogleMap"
-        val LATLNG_NOT_EXIST_ERROR = "The latitude and longtitude is not exisiting"
+        val LATLNG_NOT_EXIST_ERROR = "The position is not exisiting"
         val MARKET_NOT_EXIST_ERROR = "The marker is not existing"
         val INDEX_OUT_OF_RANGE_ERROR = "The index is out of range"
         val MARKET_NOT_HIDDEN = "The marker has not hidden"
@@ -533,11 +533,12 @@ class BaseGoogleMap : Cloneable {
         }
 
         override fun onBeforeClusterRendered(cluster: Cluster<MyItem>?, markerOptions: MarkerOptions?) {
-
+            super.onBeforeClusterRendered(cluster, markerOptions)  //default pic
         }
 
         override fun shouldRenderAsCluster(cluster: Cluster<MyItem>?): Boolean {
             return cluster!!.size > 1
         }
+
     }
 }
