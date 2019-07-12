@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.clustering.Cluster
+import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlin.collections.ArrayList
@@ -522,6 +523,36 @@ class BaseGoogleMap : Cloneable {
         val MARKET_NOT_EXIST_ERROR = "The marker is not existing"
         val INDEX_OUT_OF_RANGE_ERROR = "The index is out of range"
         val MARKET_NOT_HIDDEN = "The marker has not hidden"
+    }
+
+    class MyItem : ClusterItem {
+
+        private var mPosition : LatLng? = null
+        private var mSnippet : String? = null
+        private var mTitle : String? = null
+
+        var icon : BitmapDescriptor? = null
+
+        @JvmOverloads
+        constructor(markerOptions: MarkerOptions){
+            this.mPosition = markerOptions.position
+            this.mTitle = markerOptions.title
+            this.mSnippet = markerOptions.snippet
+            this.icon = markerOptions.icon
+        }
+
+        override fun getPosition(): LatLng {
+            return mPosition!!
+        }
+
+        override fun getSnippet(): String? {
+            return mSnippet
+        }
+
+        override fun getTitle(): String? {
+            return mTitle
+        }
+
     }
 
     class MyItemRenderer : DefaultClusterRenderer<MyItem> {

@@ -165,7 +165,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         }
 
         startClusterBtn.setOnClickListener {
-            baseGoogleMap.startCluster(applicationContext)
+            clusterTest.startCluster()
         }
 
         stopClusterBtn.setOnClickListener { clusterTest.stopCluster() }
