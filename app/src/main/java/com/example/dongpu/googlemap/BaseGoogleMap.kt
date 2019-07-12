@@ -55,6 +55,7 @@ class BaseGoogleMap : Cloneable {
         }
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
+        needClustering(marker)
         return marker
     }
 
@@ -79,6 +80,7 @@ class BaseGoogleMap : Cloneable {
         markerOptions.icon(bitmapDescriptorFactory)
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
+        needClustering(marker)
         return marker
     }
 
@@ -95,8 +97,18 @@ class BaseGoogleMap : Cloneable {
             markerOptions.position(point)
             var marker = mMap.addMarker(markerOptions)
             markerList.add(marker)
+            needClustering(marker)
         }
         return markerList
+    }
+
+    private fun needClustering(marker: Marker){
+        //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
+        if(isStartCluster){
+            marker.isVisible = false  //hide marker
+            var myItem = MyItem(marker.position)
+            clusterManger.addItem(myItem)
+        }
     }
 
     /**
