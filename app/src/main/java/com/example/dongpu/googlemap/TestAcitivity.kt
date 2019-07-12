@@ -39,6 +39,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var forbidCameraMove : Button
     private lateinit var freeCameraMove : Button
 
+    //cluster_linear_layout
+    private lateinit var startDefualtClusterBtn : Button
     private lateinit var startClusterBtn : Button
     private lateinit var stopClusterBtn : Button
 
@@ -151,14 +153,19 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     private fun initClusterTest(){
+        startDefualtClusterBtn = findViewById(R.id.start_default_cluster)
         startClusterBtn = findViewById(R.id.start_cluster)
         stopClusterBtn = findViewById(R.id.stop_cluster)
         var clusterTest = ClusterTest(applicationContext, baseGoogleMap)
 
-        startClusterBtn.setOnClickListener {
+        startDefualtClusterBtn.setOnClickListener {
             baseGoogleMap.clearMarkers()  //clear all markers
             baseGoogleMap.moveCamera(LatLng(40.721270, -73.982380))  //move camera to center
-            clusterTest.startCluster()
+            clusterTest.startDefaultCluster()
+        }
+
+        startClusterBtn.setOnClickListener {
+            baseGoogleMap.startCluster(applicationContext)
         }
 
         stopClusterBtn.setOnClickListener { clusterTest.stopCluster() }
@@ -185,6 +192,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     private fun initLatLng(){
+        /*
+        //There are some positions for test
         var latLng1 = LatLng(40.8447820000,-73.8648270000)   //New York
         var latLng2 = LatLng(40.732830,-74.171754)   //Newark
         var latLng3 = LatLng(39.9525840000,-75.1652220000)    //Philadelphia
@@ -192,7 +201,17 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         latLngList.add(latLng1)
         latLngList.add(latLng2)
         latLngList.add(latLng3)
-        latLngList.add(latLng4)
+        latLngList.add(latLng4)*/
+        var lat = 40.721270
+        var lng = -73.982380
+        var i = 0
+        while(i<10){
+            var offset = i/60.0
+            lat = lat+offset
+            lng = lng+offset
+            latLngList.add(LatLng(lat, lng))
+            i++
+        }
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {

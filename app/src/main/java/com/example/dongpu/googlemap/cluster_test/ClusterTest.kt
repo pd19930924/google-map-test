@@ -24,7 +24,7 @@ class ClusterTest {
 
     //Here is an example of clustering
     //this example is come from google
-    fun startCluster(){
+    fun startDefaultCluster(){
         var lat = 40.721270
         var lng = -73.982380
         var i = 0
@@ -34,6 +34,13 @@ class ClusterTest {
             lng = lng+offset
             baseGoogleMap.addMarkerToMap(LatLng(lat, lng))
             i++
+        }
+        baseGoogleMap.startCluster(context)
+    }
+
+    fun startCluster(){
+        if(baseGoogleMap.getMarkerList().size == 0){
+            return
         }
         baseGoogleMap.startCluster(context)
     }

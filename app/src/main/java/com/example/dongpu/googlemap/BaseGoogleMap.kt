@@ -106,7 +106,7 @@ class BaseGoogleMap : Cloneable {
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
         if(isStartCluster){
             marker.isVisible = false  //hide marker
-            var myItem = MyItem(marker.position)
+            var myItem = MyItem(marker)
             clusterManger.addItem(myItem)
         }
     }
@@ -434,16 +434,20 @@ class BaseGoogleMap : Cloneable {
      * @param showAnimation do you want to see the animation? default value is false
      */
     fun startCluster(context : Context, showAnimation : Boolean = false){
+        if(isStartCluster)return
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
         clusterManger.setAnimation(showAnimation)
         var index = 0
         for(marker in markerList){
-            var myItem = MyItem(marker.position, marker.title, marker.snippet)
+            var myItem = MyItem(marker)
             clusterManger.addItem(myItem)
             hideMarker(index)
             index++
         }
         mMap.setOnCameraIdleListener(clusterManger)
+        //with a small movement, we will make the cluster begin to work
+        setCameraZoom(getZoom() + 0.0001F)
+        setCameraZoom(getZoom() - 0.0001F)
         isStartCluster = true
     }
 
@@ -451,6 +455,7 @@ class BaseGoogleMap : Cloneable {
      * close our cluster function
      */
     fun stopCluster(){
+        if(isStartCluster == false)return
         var index = 0
         for(marker in markerList){
             showMarker(index)

@@ -4,6 +4,20 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/start_default_cluster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/start_default_cluster"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
         android:id="@+id/start_cluster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
