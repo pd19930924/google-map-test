@@ -485,7 +485,7 @@ class BaseGoogleMap : Cloneable {
             var markerOptions = markerOptionsList.get(index)
             var myItem = MyItem(markerOptions)
             clusterManger.addItem(myItem)
-            hideMarker(index)
+            hideMarkerWhenClustering(index)
         }
         clusterManger.renderer = myItemRenderer
         mMap.setOnCameraIdleListener(clusterManger)
@@ -497,6 +497,11 @@ class BaseGoogleMap : Cloneable {
         setCameraZoom(getZoom() + 0.0001F)
         setCameraZoom(getZoom() - 0.0001F)
         isStartCluster = true
+    }
+
+    private fun hideMarkerWhenClustering(index: Int){
+        var marker = markerList.get(index)
+        marker.isVisible = false
     }
 
     /**
@@ -617,9 +622,11 @@ class BaseGoogleMap : Cloneable {
 
         override fun onBeforeClusterItemRendered(item: MyItem?, markerOptions: MarkerOptions?) {
             var myMarkerOptions = item!!.markerOptions!!
-            var icon = myMarkerOptions.icon
-            markerOptions!!.icon(icon)
-            markerOptions.visible(myMarkerOptions.isVisible)
+            Log.d("pudong", myMarkerOptions.isVisible.toString())
+            markerOptions!!.title(myMarkerOptions.title)
+            markerOptions!!.snippet(myMarkerOptions.snippet)
+            markerOptions!!.visible(myMarkerOptions.isVisible)
+            markerOptions!!.icon(myMarkerOptions.icon)
         }
 
         override fun onBeforeClusterRendered(cluster: Cluster<MyItem>?, markerOptions: MarkerOptions?) {
