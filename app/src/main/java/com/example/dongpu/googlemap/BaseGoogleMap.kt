@@ -103,11 +103,11 @@ class BaseGoogleMap : Cloneable {
     private fun createMarker(markerOptions: MarkerOptions) : Marker{
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
-        needClustering(marker ,markerOptions)
+        needClusterWhenAddMarker(marker ,markerOptions)
         return marker
     }
 
-    private fun needClustering(marker : Marker, markerOptions: MarkerOptions){
+    private fun needClusterWhenAddMarker(marker : Marker, markerOptions: MarkerOptions){
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
         if(isStartCluster){
             marker.isVisible = false  //hide marker
@@ -122,19 +122,26 @@ class BaseGoogleMap : Cloneable {
      */
     fun showMarker(latLng: LatLng){
         var currentMarker : Marker? = null
+        var currentMarkerOptions : MarkerOptions? = null
         var index = 0
         for(marker in markerList){
             var mLatLng = marker.position
             if(mLatLng.equals(latLng)){
                 currentMarker = marker
-                var currentMarkerOptions = markerOptionsList.get(index)
-                currentMarkerOptions.visible(true)
+                currentMarkerOptions = markerOptionsList.get(index)
+
                 break
             }
             index++
         }
         if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
-        else currentMarker.isVisible = true  //show the marker
+        else{
+            if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+            else{
+                currentMarkerOptions?.visible(true)
+                currentMarker.isVisible = true
+            }
+        }
     }
 
     /**
@@ -147,10 +154,14 @@ class BaseGoogleMap : Cloneable {
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return
         }
-        var marker = markerList.get(index)
-        var markerOptions = markerOptionsList.get(index)
-        markerOptions.visible(true)
-        marker.isVisible = true
+        var currentMarker = markerList.get(index)
+        var currentMarkerOptions = markerOptionsList.get(index)
+
+        if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+        else{
+            currentMarkerOptions.visible(true)
+            currentMarker.isVisible = true
+        }
     }
 
     /**
@@ -158,19 +169,31 @@ class BaseGoogleMap : Cloneable {
      */
     fun showMarker(marker: Marker){
         var currentMarker : Marker? = null
+        var currentMarkerOptions : MarkerOptions? = null
         var index = 0
         for(cMarker in markerList){
             if(cMarker.equals(marker)){
                 currentMarker = cMarker
-                var currentMarkerOptions = markerOptionsList.get(index)
-                currentMarkerOptions.visible(true)
+                currentMarkerOptions = markerOptionsList.get(index)
                 break;
             }
             index++
         }
         if(currentMarker == null) {
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
-        }else currentMarker.isVisible = true
+        }else{
+            if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+            else{
+                currentMarkerOptions?.visible(true)
+                currentMarker.isVisible = true
+            }
+        }
+    }
+
+    private fun needClusterWhenShowMarker(index : Int, marker: Marker, markerOptions: MarkerOptions){
+        if(clusterManger.markerCollection.markers.contains(marker))return
+        var myItem = MyItem(index, markerOptions)
+        clusterManger.addItem(myItem)
     }
 
     /**
@@ -492,12 +515,21 @@ class BaseGoogleMap : Cloneable {
         mMap.setOnCameraIdleListener(clusterManger)
         mMap.setOnMarkerClickListener(clusterManger)
 
+        slightlyMoveMent()
+
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
         //with a small movement, we will make the cluster begin to work
+
+        isStartCluster = true
+    }
+
+    /**
+     * a slightly movement when we want to refresh our cluster
+     */
+    private fun slightlyMoveMent(){
         setCameraZoom(getZoom() + 0.0001F)
         setCameraZoom(getZoom() - 0.0001F)
-        isStartCluster = true
     }
 
     private fun hideMarkerWhenClustering(index: Int){

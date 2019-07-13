@@ -1,6 +1,7 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import java.util.logging.Handler
 
 /**
  * Created by dong.pu on 2019/7/8.
@@ -27,9 +29,20 @@ class MarkerTest {
     }
 
     fun addDefaulMarkers(){
+        var index = 0
         for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng)
+            var marker = baseGoogleMap.addMarkerToMap(latLng)
+            if(index < 6)baseGoogleMap.hideMarker(index)
+            index++
         }
+
+        android.os.Handler().postDelayed(object : Runnable{
+            override fun run() {
+                Log.d("pudong","here")
+                baseGoogleMap.showMarker(5)
+            }
+        },4000)
+
     }
 
     fun clickDefaultMarker(marker: Marker){
