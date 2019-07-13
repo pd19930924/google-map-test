@@ -1,11 +1,13 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.View
+import com.example.dongpu.googlemap.cluster_test.MyItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -489,6 +491,26 @@ class BaseGoogleMap : Cloneable {
         clusterManger.setAnimation(false)
         isStartCluster = false
     }
+    
+    /**
+     * This is used to start our night mode, when we open night mode or mode auto, the map will change
+     * @param context
+     */
+    fun startDayNightMode(context: Context){
+        var isNight = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES  //it is used to judge it is day or night
+        if(isNight){
+            //our resource located at res/raw/map_night_mode_style.xml
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_night_mode_style))
+        }
+    }
+
+    /**
+     * This is used to change our map into dark night
+     * @param context
+     */
+    fun changeToNightMode(context: Context){
+
+    }
 
     override fun clone(): Any {
         var baseGoogleMap : BaseGoogleMap? = null
@@ -499,6 +521,11 @@ class BaseGoogleMap : Cloneable {
             e.printStackTrace()
             return Any()
         }
+    }
+
+
+    override fun toString(): String {
+        return super.toString()
     }
 
     /**
@@ -537,14 +564,14 @@ class BaseGoogleMap : Cloneable {
         private var mSnippet : String? = null
         private var mTitle : String? = null
 
-        var icon : BitmapDescriptor? = null
+        var markerOptions : MarkerOptions? = null
 
         @JvmOverloads
         constructor(markerOptions: MarkerOptions){
             this.mPosition = markerOptions.position
             this.mTitle = markerOptions.title
             this.mSnippet = markerOptions.snippet
-            this.icon = markerOptions.icon
+            this.markerOptions = markerOptions
         }
 
         override fun getPosition(): LatLng {
@@ -566,7 +593,9 @@ class BaseGoogleMap : Cloneable {
         constructor( context : Context, mMap: GoogleMap, clusterManager: ClusterManager<MyItem>) : super(context,mMap, clusterManager)
 
         override fun onBeforeClusterItemRendered(item: MyItem?, markerOptions: MarkerOptions?) {
-            markerOptions!!.icon(item?.icon)
+            var myMarkerOptions = item!!.markerOptions!!
+            var icon = myMarkerOptions.icon
+            markerOptions!!.icon(icon)
         }
 
         override fun onBeforeClusterRendered(cluster: Cluster<MyItem>?, markerOptions: MarkerOptions?) {
