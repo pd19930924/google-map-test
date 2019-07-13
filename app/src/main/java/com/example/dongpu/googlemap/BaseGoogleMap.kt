@@ -339,6 +339,15 @@ class BaseGoogleMap : Cloneable {
 
     /**
      * This is used to forbid the movement of camera when we try to make our camera can not go far away
+     * we will forbidCemera in current place
+     */
+    fun forbidCameraMove(){
+        var centerLatLng = getCameraLatLng()
+        forbidCameraMove(centerLatLng)
+    }
+
+    /**
+     * This is used to forbid the movement of camera when we try to make our camera can not go far away
      * @param centerLatLng our cameraCenter
      */
     fun forbidCameraMove(centerLatLng: LatLng){
@@ -365,15 +374,6 @@ class BaseGoogleMap : Cloneable {
     fun freeCameraMove(){
         if(!isForbidOrLimitCameraMovement)return
         mMap.setLatLngBoundsForCameraTarget(null)
-    }
-
-    /**
-     * We used it to fix our cameral, and our cameral will never moved if we try to move our camera
-     * @param latLng This will be our screen center
-     */
-    fun fixCamera(latLng: LatLng){
-        var mapBounds = LatLngBounds(latLng, latLng)
-        mMap.setLatLngBoundsForCameraTarget(mapBounds)
     }
 
     /**
@@ -491,7 +491,7 @@ class BaseGoogleMap : Cloneable {
         clusterManger.setAnimation(false)
         isStartCluster = false
     }
-    
+
     /**
      * This is used to start our night mode, when we open night mode or mode auto, the map will change
      * @param context
@@ -500,7 +500,7 @@ class BaseGoogleMap : Cloneable {
         var isNight = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES  //it is used to judge it is day or night
         if(isNight){
             //our resource located at res/raw/map_night_mode_style.xml
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_night_mode_style))
+            changeToNightMode(context)
         }
     }
 
@@ -509,7 +509,7 @@ class BaseGoogleMap : Cloneable {
      * @param context
      */
     fun changeToNightMode(context: Context){
-
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_night_mode_style))
     }
 
     override fun clone(): Any {
