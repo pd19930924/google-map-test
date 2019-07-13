@@ -111,7 +111,7 @@ class BaseGoogleMap : Cloneable {
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
         if(isStartCluster){
             marker.isVisible = false  //hide marker
-            var myItem = MyItem(markerOptions)
+            var myItem = MyItem(markerList.size - 1, markerOptions)
             clusterManger.addItem(myItem)
         }
     }
@@ -482,10 +482,11 @@ class BaseGoogleMap : Cloneable {
 
         var myItemRenderer = MyItemRenderer(context, mMap, clusterManger)
         markerList.forEachIndexed { index, marker ->
+            if(!marker.isVisible)return@forEachIndexed  //if marker is not visible, we will not add marker to clusterManager
             var markerOptions = markerOptionsList.get(index)
-            var myItem = MyItem(markerOptions)
+            var myItem = MyItem(index, markerOptions)
             clusterManger.addItem(myItem)
-            hideMarkerWhenClustering(index)
+            hideMarkerWhenClustering(index)   //hide the marker
         }
         clusterManger.renderer = myItemRenderer
         mMap.setOnCameraIdleListener(clusterManger)
@@ -594,8 +595,13 @@ class BaseGoogleMap : Cloneable {
 
         var markerOptions : MarkerOptions? = null
 
+        //This id is used to store the index of our maker
+        //we can use the id to restore our marker(after stop cluster)
+        var id = 0
+
         @JvmOverloads
-        constructor(markerOptions: MarkerOptions){
+        constructor(id : Int, markerOptions: MarkerOptions){
+            this.id = id
             this.mPosition = markerOptions.position
             this.mTitle = markerOptions.title
             this.mSnippet = markerOptions.snippet
@@ -622,10 +628,8 @@ class BaseGoogleMap : Cloneable {
 
         override fun onBeforeClusterItemRendered(item: MyItem?, markerOptions: MarkerOptions?) {
             var myMarkerOptions = item!!.markerOptions!!
-            Log.d("pudong", myMarkerOptions.isVisible.toString())
             markerOptions!!.title(myMarkerOptions.title)
             markerOptions!!.snippet(myMarkerOptions.snippet)
-            markerOptions!!.visible(myMarkerOptions.isVisible)
             markerOptions!!.icon(myMarkerOptions.icon)
         }
 
@@ -636,6 +640,5 @@ class BaseGoogleMap : Cloneable {
         override fun shouldRenderAsCluster(cluster: Cluster<MyItem>?): Boolean {
             return cluster!!.size > 1
         }
-
     }
 }
