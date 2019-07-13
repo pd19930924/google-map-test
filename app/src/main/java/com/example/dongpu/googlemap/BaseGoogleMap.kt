@@ -27,8 +27,6 @@ class BaseGoogleMap : Cloneable {
     private lateinit var markerList : ArrayList<Marker>  //it is used to remove markers, hide markers
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
 
-    private lateinit var hideMarkerList : ArrayList<Marker>  //it is used to storage hide markers in case that we need to show some hide markers
-
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
 
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
@@ -38,7 +36,6 @@ class BaseGoogleMap : Cloneable {
         this.mMap = mMap
         this.markerList = ArrayList<Marker>()
         this.markerOptionsList = ArrayList<MarkerOptions>()
-        this.hideMarkerList = ArrayList<Marker>()
     }
 
     /**
@@ -123,20 +120,21 @@ class BaseGoogleMap : Cloneable {
      * show hide markers if we have hide it
      * @param latLng
      */
-    fun showMarkers(latLng: LatLng){
+    fun showMarker(latLng: LatLng){
         var currentMarker : Marker? = null
-        for(marker in hideMarkerList){
+        var index = 0
+        for(marker in markerList){
             var mLatLng = marker.position
             if(mLatLng.equals(latLng)){
                 currentMarker = marker
+                var currentMarkerOptions = markerOptionsList.get(index)
+                currentMarkerOptions.visible(true)
                 break
             }
+            index++
         }
         if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
-        else{
-            currentMarker.isVisible = true  //show the marker
-            hideMarkerList.remove(currentMarker!!)   //we have restore the marker, so we delete the marker in hideMarkerList
-        }
+        else currentMarker.isVisible = true  //show the marker
     }
 
     /**
@@ -150,15 +148,29 @@ class BaseGoogleMap : Cloneable {
             return
         }
         var marker = markerList.get(index)
+        var markerOptions = markerOptionsList.get(index)
+        markerOptions.visible(true)
         marker.isVisible = true
-        hideMarkerList.remove(marker)   //set hidemMarkerList
     }
 
     /**
      * @param marker we use exist marker to show marker
      */
     fun showMarker(marker: Marker){
-        if(!hideMarkerList.remove(marker)) Log.e(TAG, MARKET_NOT_HIDDEN)
+        var currentMarker : Marker? = null
+        var index = 0
+        for(cMarker in markerList){
+            if(cMarker.equals(marker)){
+                currentMarker = cMarker
+                var currentMarkerOptions = markerOptionsList.get(index)
+                currentMarkerOptions.visible(true)
+                break;
+            }
+            index++
+        }
+        if(currentMarker == null) {
+            Log.e(TAG, MARKET_NOT_EXIST_ERROR)
+        }else currentMarker.isVisible = true
     }
 
     /**
@@ -167,23 +179,24 @@ class BaseGoogleMap : Cloneable {
      */
     fun hideMarker(latLng: LatLng) : Marker?{
         var currentMarker : Marker? = null
+        var index = 0
         for(marker in markerList){
             var mLatLng = marker.position  //get latLng
             if(mLatLng.equals(latLng)){
                 currentMarker = marker
+                var currentMarkerOptions = markerOptionsList.get(index)
+                currentMarkerOptions.visible(false)
                 break
             }
+            index++
         }
         //if currentMarker is null , it means that we does not have the marker
         if(currentMarker == null){
             Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
             return null
         }
-        else{
-            currentMarker.isVisible = false
-            hideMarkerList.add(currentMarker)  //set hidemMarkerList
-            return currentMarker
-        }
+        else currentMarker.isVisible = false
+        return currentMarker
     }
 
     /**
@@ -196,21 +209,33 @@ class BaseGoogleMap : Cloneable {
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return null
         }
-        var marker = markerList.get(index)
-        marker.isVisible = false
-        hideMarkerList.add(marker)   //set hidemMarkerList
-        return marker
+        var currentMarker = markerList.get(index)
+        var currentMarkerOptions = markerOptionsList.get(index)
+        currentMarker.isVisible = false
+        currentMarkerOptions.visible(false)
+        return currentMarker
     }
 
     /**
      * @param marker we use exist marker to hide the marker
      */
     fun hideMarker(marker: Marker) : Marker?{
-        if(!markerList.contains(marker)) {
+        var currentMarker : Marker? = null
+        var index = 0
+        for(cMarker in markerList){
+            if(cMarker.equals(marker)){
+                currentMarker = cMarker
+                var currentMarkerOptions = markerOptionsList.get(index)
+                currentMarkerOptions.visible(false)
+                break;
+            }
+            index++
+        }
+        if(currentMarker == null) {
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
             return null
         }
-        else hideMarkerList.add(marker)
+        else currentMarker.isVisible = true
         return marker
     }
 
