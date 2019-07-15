@@ -515,9 +515,7 @@ class BaseGoogleMap : Cloneable {
         clusterManger.renderer = myItemRenderer
         mMap.setOnCameraIdleListener(clusterManger)
         mMap.setOnMarkerClickListener(clusterManger)
-
-        slightlyMoveMent()
-
+        //slightlyMoveMent()
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
         //with a small movement, we will make the cluster begin to work
