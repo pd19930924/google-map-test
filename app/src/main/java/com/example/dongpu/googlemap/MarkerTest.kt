@@ -1,6 +1,7 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import java.util.logging.Handler
 
 /**
  * Created by dong.pu on 2019/7/8.
@@ -27,8 +29,10 @@ class MarkerTest {
     }
 
     fun addDefaulMarkers(){
+        var index = 0
         for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng)
+            var marker = baseGoogleMap.addMarkerToMap(latLng)
+            index++
         }
     }
 
@@ -45,7 +49,7 @@ class MarkerTest {
 
     fun addDrawableMarkers(){
         for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng, "", R.drawable.ic_parking_green)
+            baseGoogleMap.addMarkerToMap(latLng, null, null, R.drawable.ic_parking_green)
         }
     }
 
@@ -70,7 +74,7 @@ class MarkerTest {
             var value = view.findViewById<TextView>(R.id.value)
             var background = view.findViewById<LinearLayout>(R.id.background)
             value.text = "value"
-            var marker = baseGoogleMap.addMarkerToMap(latLng, "", view)
+            var marker = baseGoogleMap.addMarkerToMap(latLng, null, null,view)
             marker.title = "value"
         }
     }
