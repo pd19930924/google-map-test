@@ -27,7 +27,7 @@ class BaseGoogleMap : Cloneable {
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
 
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
-    private lateinit var clusterItemList : ArrayList<MyItem>   //help clusterManger to store item
+    private lateinit var clusterItemList : ArrayList<MyItem?>   //help clusterManger to store item
 
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
@@ -535,10 +535,14 @@ class BaseGoogleMap : Cloneable {
 
         var myItemRenderer = MyItemRenderer(context, mMap, clusterManger)
         markerList.forEachIndexed { index, marker ->
-            if(!marker.isVisible) return@forEachIndexed //if marker is not visible, we will not add marker to clusterManager
+            if(!marker.isVisible) {
+                clusterItemList.add(null)
+                return@forEachIndexed //if marker is not visible, we will not add marker to clusterManager
+            }
             var markerOptions = markerOptionsList.get(index)
             var myItem = MyItem(index, markerOptions)
             clusterManger.addItem(myItem)
+            clusterItemList.add(myItem)
             hideMarkerWhenClustering(index)   //hide the marker
         }
         clusterManger.renderer = myItemRenderer
@@ -579,6 +583,7 @@ class BaseGoogleMap : Cloneable {
         clusterManger.algorithm.items.forEach {
             showMarker(it.id)
         }
+        clusterItemList.clear()
         clusterManger.clusterMarkerCollection.clear()  //clear all cluster info, we need this ,or the cluster circle will not clear
         clusterManger.clearItems()
         clusterManger.setAnimation(false)
