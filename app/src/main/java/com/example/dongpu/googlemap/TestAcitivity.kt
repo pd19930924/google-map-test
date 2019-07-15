@@ -93,6 +93,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         }
 
         clearAllBtn.setOnClickListener {
+            baseGoogleMap.stopCluster()
             baseGoogleMap.clearAll()
         }
     }
