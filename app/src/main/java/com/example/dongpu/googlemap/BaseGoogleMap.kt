@@ -90,10 +90,6 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
-     * @param position
-     * @param title
-     * @param snippet
-     * @param icon
      * @return our markerOptions
      */
     @JvmOverloads
@@ -120,9 +116,7 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
-     * if we are in cluster, and we need add marker, then we need to refresh marker in our cluster
-     * @param marker
-     * @param markerOptions
+     * if we are in cluster, and we need adding marker, then we need to refresh marker in our cluster
      */
     private fun needClusterWhenAddMarker(marker: Marker, markerOptions: MarkerOptions){
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
@@ -206,6 +200,9 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    /**
+     * if we are in cluster, and we need showing hide marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenShowMarker(index : Int){
         if(index <= 0 || index >= clusterItemList.size) return
         var currentMyItem = clusterItemList.get(index)
@@ -283,6 +280,9 @@ class BaseGoogleMap : Cloneable {
         return marker
     }
 
+    /**
+     * if we are in cluster, and we need hiding marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenHideMarker(index : Int){
         var currentMyItem = clusterItemList.get(index)
         if(currentMyItem == null) return   //we have removed the item
@@ -366,6 +366,9 @@ class BaseGoogleMap : Cloneable {
         return true
     }
 
+    /**
+     * if we are in cluster, and we need removing marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenRemoveMarker(index: Int){
         var currentMyItem = clusterItemList.get(index)
         if(currentMyItem == null) return
@@ -589,6 +592,9 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    /**
+     * This is used for special situation , when we start cluster, we need hiding all marker we have put before
+     */
     private fun hideMarkerWhenClustering(index: Int){
         var marker = markerList.get(index)
         marker.isVisible = false
@@ -676,7 +682,6 @@ class BaseGoogleMap : Cloneable {
     }
 
     class MyItem : ClusterItem {
-
         private var mPosition : LatLng? = null
         private var mSnippet : String? = null
         private var mTitle : String? = null
@@ -702,7 +707,6 @@ class BaseGoogleMap : Cloneable {
         override fun getTitle(): String? {
             return mTitle
         }
-
     }
 
     class MyItemRenderer : DefaultClusterRenderer<MyItem> {
