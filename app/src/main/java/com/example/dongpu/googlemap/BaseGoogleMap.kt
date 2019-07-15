@@ -275,6 +275,7 @@ class BaseGoogleMap : Cloneable {
         currentMarker.remove()
         markerList.removeAt(index)
         markerOptionsList.removeAt(index)
+        needClusterWhenRemoveMarker(index)
         return true
     }
 
@@ -295,6 +296,7 @@ class BaseGoogleMap : Cloneable {
                 //because it will search all datas to judge which data is the marker we need
                 markerList.removeAt(index)
                 markerOptionsList.removeAt(index)
+                needClusterWhenRemoveMarker(index)
                 break
             }
             index++
@@ -322,6 +324,7 @@ class BaseGoogleMap : Cloneable {
                 //because it will search all datas to judge which data is the marker we need
                 markerList.removeAt(index)
                 markerOptionsList.removeAt(index)
+                needClusterWhenRemoveMarker(index)
                 break
             }
             index++
@@ -331,6 +334,16 @@ class BaseGoogleMap : Cloneable {
             return false
         }
         return true
+    }
+
+    private fun needClusterWhenRemoveMarker(index: Int){
+        if(isStartCluster){
+            var myItem = clusterManger.algorithm.items.find {
+                index == it.id
+            }
+            clusterManger.removeItem(myItem)
+            slightlyMoveMent()
+        }
     }
 
     /**
@@ -506,7 +519,7 @@ class BaseGoogleMap : Cloneable {
 
         var myItemRenderer = MyItemRenderer(context, mMap, clusterManger)
         markerList.forEachIndexed { index, marker ->
-            if(!marker.isVisible)return@forEachIndexed  //if marker is not visible, we will not add marker to clusterManager
+            if(!marker.isVisible) return@forEachIndexed //if marker is not visible, we will not add marker to clusterManager
             var markerOptions = markerOptionsList.get(index)
             var myItem = MyItem(index, markerOptions)
             clusterManger.addItem(myItem)
@@ -516,7 +529,7 @@ class BaseGoogleMap : Cloneable {
         mMap.setOnCameraIdleListener(clusterManger)
         mMap.setOnMarkerClickListener(clusterManger)
 
-        slightlyMoveMent()
+        //slightlyMoveMent()
 
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
@@ -527,8 +540,12 @@ class BaseGoogleMap : Cloneable {
      * a slightly movement when we want to refresh our cluster
      */
     private fun slightlyMoveMent(){
-        setCameraZoom(getZoom() + 0.0001F)
-        setCameraZoom(getZoom() - 0.0001F)
+        var currentZoom = getZoom()
+        when(currentZoom){
+            mMap.maxZoomLevel -> setCameraZoom(getZoom() - 0.00000001F)
+            mMap.minZoomLevel -> setCameraZoom(getZoom() + 0.00000001F)
+            else -> setCameraZoom(getZoom() + 0.00000001F)
+        }
     }
 
     private fun hideMarkerWhenClustering(index: Int){
