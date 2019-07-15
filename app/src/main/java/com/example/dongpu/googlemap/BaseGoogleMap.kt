@@ -129,7 +129,6 @@ class BaseGoogleMap : Cloneable {
             if(mLatLng.equals(latLng)){
                 currentMarker = marker
                 currentMarkerOptions = markerOptionsList.get(index)
-
                 break
             }
             index++
@@ -262,7 +261,7 @@ class BaseGoogleMap : Cloneable {
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
             return null
         }
-        else currentMarker.isVisible = true
+        else currentMarker.isVisible = false
         return marker
     }
 
