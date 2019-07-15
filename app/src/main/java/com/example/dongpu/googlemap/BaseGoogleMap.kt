@@ -103,17 +103,16 @@ class BaseGoogleMap : Cloneable {
     private fun createMarker(markerOptions: MarkerOptions) : Marker{
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
-        needClusterWhenAddMarker(marker ,markerOptions)
+        if(isStartCluster) needClusterWhenAddMarker(markerOptions)
         return marker
     }
 
-    private fun needClusterWhenAddMarker(marker : Marker, markerOptions: MarkerOptions){
+    private fun needClusterWhenAddMarker(markerOptions: MarkerOptions){
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
-        if(isStartCluster){
-            marker.isVisible = false  //hide marker
-            var myItem = MyItem(markerList.size - 1, markerOptions)
-            clusterManger.addItem(myItem)
-        }
+        var myItem = MyItem(markerOptions)
+        clusterItemList.add(myItem)
+        clusterManger.addItem(myItem)
+        slightlyMoveMent()
     }
 
     /**
@@ -135,7 +134,7 @@ class BaseGoogleMap : Cloneable {
         }
         if(currentMarker == null)Log.e(TAG, LATLNG_NOT_EXIST_ERROR)
         else{
-            if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+            if(isStartCluster)needClusterWhenShowMarker(index)
             else{
                 currentMarkerOptions?.visible(true)
                 currentMarker.isVisible = true
@@ -156,7 +155,7 @@ class BaseGoogleMap : Cloneable {
         var currentMarker = markerList.get(index)
         var currentMarkerOptions = markerOptionsList.get(index)
 
-        if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+        if(isStartCluster)needClusterWhenShowMarker(index)
         else{
             currentMarkerOptions.visible(true)
             currentMarker.isVisible = true
@@ -181,7 +180,7 @@ class BaseGoogleMap : Cloneable {
         if(currentMarker == null) {
             Log.e(TAG, MARKET_NOT_EXIST_ERROR)
         }else{
-            if(isStartCluster)needClusterWhenShowMarker(index, currentMarker, currentMarkerOptions!!)
+            if(isStartCluster)needClusterWhenShowMarker(index)
             else{
                 currentMarkerOptions?.visible(true)
                 currentMarker.isVisible = true
@@ -189,10 +188,11 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
-    private fun needClusterWhenShowMarker(index : Int, marker: Marker, markerOptions: MarkerOptions){
-        if(clusterManger.markerCollection.markers.contains(marker))return
-        var myItem = MyItem(index, markerOptions)
-        clusterManger.addItem(myItem)
+    private fun needClusterWhenShowMarker(index : Int){
+        if(index <= 0 || index >= clusterItemList.size) return
+        var currentMyItem = clusterItemList.get(index)
+        if(currentMyItem != null) return //if it is not null, it means that we have show the marker
+        clusterManger.addItem(currentMyItem)
         slightlyMoveMent()
     }
 
@@ -209,7 +209,7 @@ class BaseGoogleMap : Cloneable {
                 currentMarker = marker
                 var currentMarkerOptions = markerOptionsList.get(index)
                 currentMarkerOptions.visible(false)
-                needClusterWhenHideMarker(index)
+                if(isStartCluster)needClusterWhenHideMarker(index)
                 break
             }
             index++
@@ -237,7 +237,7 @@ class BaseGoogleMap : Cloneable {
         var currentMarkerOptions = markerOptionsList.get(index)
         currentMarker.isVisible = false
         currentMarkerOptions.visible(false)
-        needClusterWhenHideMarker(index)
+        if(isStartCluster)needClusterWhenHideMarker(index)
         return currentMarker
     }
 
@@ -252,7 +252,7 @@ class BaseGoogleMap : Cloneable {
                 currentMarker = cMarker
                 var currentMarkerOptions = markerOptionsList.get(index)
                 currentMarkerOptions.visible(false)
-                needClusterWhenHideMarker(index)
+                if(isStartCluster)needClusterWhenHideMarker(index)
                 break;
             }
             index++
@@ -266,14 +266,11 @@ class BaseGoogleMap : Cloneable {
     }
 
     private fun needClusterWhenHideMarker(index : Int){
-        if(isStartCluster){
-            var myItem = clusterManger.algorithm.items.find {
-                index == it.id
-            }
-            if(myItem == null)return
-            clusterManger.removeItem(myItem)
-            slightlyMoveMent()
-        }
+        var currentMyItem = clusterItemList.get(index)
+        if(currentMyItem == null) return   //we have removed the item
+        clusterManger.removeItem(currentMyItem)
+        currentMyItem = null
+        slightlyMoveMent()
     }
 
     /**
@@ -290,7 +287,7 @@ class BaseGoogleMap : Cloneable {
         currentMarker.remove()
         markerList.removeAt(index)
         markerOptionsList.removeAt(index)
-        needClusterWhenRemoveMarker(index)
+        if(isStartCluster)needClusterWhenRemoveMarker(index)
         return true
     }
 
@@ -311,7 +308,7 @@ class BaseGoogleMap : Cloneable {
                 //because it will search all datas to judge which data is the marker we need
                 markerList.removeAt(index)
                 markerOptionsList.removeAt(index)
-                needClusterWhenRemoveMarker(index)
+                if(isStartCluster)needClusterWhenRemoveMarker(index)
                 break
             }
             index++
@@ -339,7 +336,7 @@ class BaseGoogleMap : Cloneable {
                 //because it will search all datas to judge which data is the marker we need
                 markerList.removeAt(index)
                 markerOptionsList.removeAt(index)
-                needClusterWhenRemoveMarker(index)
+                if(isStartCluster)needClusterWhenRemoveMarker(index)
                 break
             }
             index++
@@ -352,14 +349,11 @@ class BaseGoogleMap : Cloneable {
     }
 
     private fun needClusterWhenRemoveMarker(index: Int){
-        if(isStartCluster){
-            var myItem = clusterManger.algorithm.items.find {
-                index == it.id
-            }
-            if(myItem == null)return
-            clusterManger.removeItem(myItem)
-            slightlyMoveMent()
-        }
+        var currentMyItem = clusterItemList.get(index)
+        if(currentMyItem == null) return
+        clusterManger.removeItem(currentMyItem)
+        clusterItemList.removeAt(index)
+        slightlyMoveMent()
     }
 
     /**
@@ -533,6 +527,8 @@ class BaseGoogleMap : Cloneable {
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
         clusterManger.setAnimation(showAnimation)
 
+        clusterItemList = ArrayList<MyItem?>()
+
         var myItemRenderer = MyItemRenderer(context, mMap, clusterManger)
         markerList.forEachIndexed { index, marker ->
             if(!marker.isVisible) {
@@ -540,7 +536,7 @@ class BaseGoogleMap : Cloneable {
                 return@forEachIndexed //if marker is not visible, we will not add marker to clusterManager
             }
             var markerOptions = markerOptionsList.get(index)
-            var myItem = MyItem(index, markerOptions)
+            var myItem = MyItem(markerOptions)
             clusterManger.addItem(myItem)
             clusterItemList.add(myItem)
             hideMarkerWhenClustering(index)   //hide the marker
@@ -548,8 +544,6 @@ class BaseGoogleMap : Cloneable {
         clusterManger.renderer = myItemRenderer
         mMap.setOnCameraIdleListener(clusterManger)
         mMap.setOnMarkerClickListener(clusterManger)
-
-        //slightlyMoveMent()
 
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
@@ -560,11 +554,21 @@ class BaseGoogleMap : Cloneable {
      * a slightly movement when we want to refresh our cluster
      */
     private fun slightlyMoveMent(){
+        var moveMent = 0.00001F
         var currentZoom = getZoom()
         when(currentZoom){
-            mMap.maxZoomLevel -> setCameraZoom(getZoom() - 0.00000001F)
-            mMap.minZoomLevel -> setCameraZoom(getZoom() + 0.00000001F)
-            else -> setCameraZoom(getZoom() + 0.00000001F)
+            mMap.maxZoomLevel -> {
+                setCameraZoom(currentZoom - moveMent)
+                setCameraZoom(currentZoom + moveMent)
+            }
+            mMap.minZoomLevel -> {
+                setCameraZoom(currentZoom + moveMent)
+                setCameraZoom(currentZoom - moveMent)
+            }
+            else -> {
+                setCameraZoom(currentZoom + moveMent)
+                setCameraZoom(currentZoom - moveMent)
+            }
         }
     }
 
@@ -580,8 +584,8 @@ class BaseGoogleMap : Cloneable {
         if(isStartCluster == false)return  //if we have closed cluster, will will never close it again
         isStartCluster = false
 
-        clusterManger.algorithm.items.forEach {
-            showMarker(it.id)
+        clusterItemList.forEachIndexed { index, myItem ->
+            if(myItem != null) showMarker(index)
         }
         clusterItemList.clear()
         clusterManger.clusterMarkerCollection.clear()  //clear all cluster info, we need this ,or the cluster circle will not clear
@@ -665,11 +669,9 @@ class BaseGoogleMap : Cloneable {
 
         //This id is used to store the index of our maker
         //we can use the id to restore our marker(after stop cluster)
-        var id = 0
 
         @JvmOverloads
-        constructor(id : Int, markerOptions: MarkerOptions){
-            this.id = id
+        constructor(markerOptions: MarkerOptions){
             this.mPosition = markerOptions.position
             this.mTitle = markerOptions.title
             this.mSnippet = markerOptions.snippet

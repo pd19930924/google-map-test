@@ -1,6 +1,8 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -9,7 +11,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import java.util.logging.Handler
 
 /**
  * Created by dong.pu on 2019/7/8.
@@ -34,6 +35,20 @@ class MarkerTest {
             var marker = baseGoogleMap.addMarkerToMap(latLng)
             index++
         }
+
+        Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
+            override fun run() {
+                Log.d("pudong","1")
+                baseGoogleMap.hideMarker(1)
+            }
+        },5000)
+
+        Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
+            override fun run() {
+                Log.d("pudong","2")
+                baseGoogleMap.removeMarker(0)
+            }
+        },10000)
     }
 
     fun clickDefaultMarker(marker: Marker){
