@@ -269,7 +269,7 @@ class BaseGoogleMap : Cloneable {
         var currentMyItem = clusterItemList.get(index)
         if(currentMyItem == null) return   //we have removed the item
         clusterManger.removeItem(currentMyItem)
-        currentMyItem = null
+        clusterItemList.set(index, null)
         slightlyMoveMent()
     }
 
@@ -547,14 +547,13 @@ class BaseGoogleMap : Cloneable {
 
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
-        //with a small movement, we will make the cluster begin to work
     }
 
     /**
      * a slightly movement when we want to refresh our cluster
      */
     private fun slightlyMoveMent(){
-        var moveMent = 0.00001F
+        var moveMent = 0.000005F
         var currentZoom = getZoom()
         when(currentZoom){
             mMap.maxZoomLevel -> {
@@ -624,7 +623,6 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
-
     override fun toString(): String {
         return super.toString()
     }
@@ -666,9 +664,6 @@ class BaseGoogleMap : Cloneable {
         private var mTitle : String? = null
 
         var markerOptions : MarkerOptions? = null
-
-        //This id is used to store the index of our maker
-        //we can use the id to restore our marker(after stop cluster)
 
         @JvmOverloads
         constructor(markerOptions: MarkerOptions){
