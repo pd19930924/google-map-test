@@ -542,7 +542,7 @@ class BaseGoogleMap : Cloneable {
     fun startCluster(context : Context, showAnimation : Boolean = false,
                      onClusterClickListener: ClusterManager.OnClusterClickListener<MyItem>? = null,
                      onMarkerClickListener: GoogleMap.OnMarkerClickListener? = null){
-        if(isStartCluster)return   //if we have started cluster, will will never start it again
+        if(isStartCluster)return   //if we have started cluster, we will never start it again
         isStartCluster = true
 
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
