@@ -32,17 +32,8 @@ class MarkerTest {
         var index = 0
         for(latLng in latLngList){
             var marker = baseGoogleMap.addMarkerToMap(latLng)
-            if(index < 6)baseGoogleMap.hideMarker(index)
             index++
         }
-
-        android.os.Handler().postDelayed(object : Runnable{
-            override fun run() {
-                Log.d("pudong","here")
-                baseGoogleMap.showMarker(5)
-            }
-        },4000)
-
     }
 
     fun clickDefaultMarker(marker: Marker){

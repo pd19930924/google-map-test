@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.View
-import com.example.dongpu.googlemap.cluster_test.MyItem
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -500,6 +499,8 @@ class BaseGoogleMap : Cloneable {
                      onClusterClickListener: ClusterManager.OnClusterClickListener<MyItem>? = null,
                      onMarkerClickListener: GoogleMap.OnMarkerClickListener? = null){
         if(isStartCluster)return   //if we have started cluster, will will never start it again
+        isStartCluster = true
+
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
         clusterManger.setAnimation(showAnimation)
 
@@ -520,8 +521,6 @@ class BaseGoogleMap : Cloneable {
         clusterManger.setOnClusterClickListener(onClusterClickListener)
         clusterManger.markerCollection.setOnMarkerClickListener(onMarkerClickListener)
         //with a small movement, we will make the cluster begin to work
-
-        isStartCluster = true
     }
 
     /**
@@ -542,15 +541,14 @@ class BaseGoogleMap : Cloneable {
      */
     fun stopCluster(){
         if(isStartCluster == false)return  //if we have closed cluster, will will never close it again
-        var index = 0
-        for(marker in markerList){
-            showMarker(index)
-            index++
+        isStartCluster = false
+
+        clusterManger.algorithm.items.forEach {
+            showMarker(it.id)
         }
         clusterManger.clusterMarkerCollection.clear()  //clear all cluster info, we need this ,or the cluster circle will not clear
         clusterManger.clearItems()
         clusterManger.setAnimation(false)
-        isStartCluster = false
     }
 
     /**
