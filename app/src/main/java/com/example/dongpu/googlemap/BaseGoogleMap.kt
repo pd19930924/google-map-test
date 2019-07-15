@@ -27,6 +27,7 @@ class BaseGoogleMap : Cloneable {
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
 
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
+    private lateinit var clusterItemList : ArrayList<MyItem>   //help clusterManger to store item
 
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
@@ -208,6 +209,7 @@ class BaseGoogleMap : Cloneable {
                 currentMarker = marker
                 var currentMarkerOptions = markerOptionsList.get(index)
                 currentMarkerOptions.visible(false)
+                needClusterWhenHideMarker(index)
                 break
             }
             index++
@@ -235,6 +237,7 @@ class BaseGoogleMap : Cloneable {
         var currentMarkerOptions = markerOptionsList.get(index)
         currentMarker.isVisible = false
         currentMarkerOptions.visible(false)
+        needClusterWhenHideMarker(index)
         return currentMarker
     }
 
@@ -249,6 +252,7 @@ class BaseGoogleMap : Cloneable {
                 currentMarker = cMarker
                 var currentMarkerOptions = markerOptionsList.get(index)
                 currentMarkerOptions.visible(false)
+                needClusterWhenHideMarker(index)
                 break;
             }
             index++
@@ -259,6 +263,17 @@ class BaseGoogleMap : Cloneable {
         }
         else currentMarker.isVisible = true
         return marker
+    }
+
+    private fun needClusterWhenHideMarker(index : Int){
+        if(isStartCluster){
+            var myItem = clusterManger.algorithm.items.find {
+                index == it.id
+            }
+            if(myItem == null)return
+            clusterManger.removeItem(myItem)
+            slightlyMoveMent()
+        }
     }
 
     /**
@@ -341,6 +356,7 @@ class BaseGoogleMap : Cloneable {
             var myItem = clusterManger.algorithm.items.find {
                 index == it.id
             }
+            if(myItem == null)return
             clusterManger.removeItem(myItem)
             slightlyMoveMent()
         }
