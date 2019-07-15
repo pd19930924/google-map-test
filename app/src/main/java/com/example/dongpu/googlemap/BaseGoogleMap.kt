@@ -89,6 +89,13 @@ class BaseGoogleMap : Cloneable {
         return markerList
     }
 
+    /**
+     * @param position
+     * @param title
+     * @param snippet
+     * @param icon
+     * @return our markerOptions
+     */
     @JvmOverloads
     private fun createMarkerOptions(position : LatLng, title : String? = null, snippet: String? = null, icon : BitmapDescriptor? = null) : MarkerOptions{
         var markerOptions = MarkerOptions()
@@ -100,15 +107,26 @@ class BaseGoogleMap : Cloneable {
         return markerOptions
     }
 
+    /**
+     * here we use markOptions to build a marker
+     * @param markerOptions
+     * @return marker
+     */
     private fun createMarker(markerOptions: MarkerOptions) : Marker{
         var marker = mMap.addMarker(markerOptions)
         markerList.add(marker)
-        if(isStartCluster) needClusterWhenAddMarker(markerOptions)
+        if(isStartCluster) needClusterWhenAddMarker(marker, markerOptions)
         return marker
     }
 
-    private fun needClusterWhenAddMarker(markerOptions: MarkerOptions){
+    /**
+     * if we are in cluster, and we need add marker, then we need to refresh marker in our cluster
+     * @param marker
+     * @param markerOptions
+     */
+    private fun needClusterWhenAddMarker(marker: Marker, markerOptions: MarkerOptions){
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
+        marker.isVisible = false
         var myItem = MyItem(markerOptions)
         clusterItemList.add(myItem)
         clusterManger.addItem(myItem)
