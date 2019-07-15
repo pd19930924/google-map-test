@@ -194,6 +194,7 @@ class BaseGoogleMap : Cloneable {
         if(clusterManger.markerCollection.markers.contains(marker))return
         var myItem = MyItem(index, markerOptions)
         clusterManger.addItem(myItem)
+        slightlyMoveMent()
     }
 
     /**
