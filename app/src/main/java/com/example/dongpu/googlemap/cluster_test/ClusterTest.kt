@@ -5,6 +5,7 @@ import com.example.dongpu.googlemap.BaseGoogleMap
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
+import java.util.*
 
 /**
  * Created by dong.pu on 2019/7/11.
@@ -46,5 +47,17 @@ class ClusterTest {
 
     fun stopCluster(){
         baseGoogleMap.stopCluster()
+    }
+
+    fun hideSomeCluster(){
+        if(!baseGoogleMap.getIsStartCluster()) return  //we must make sure tha we have begin cluster
+        var stack = Stack<Int>()
+        var size = baseGoogleMap.getMarkerList().size
+        for(i in 0..size){
+            var random = Random().nextDouble()
+            if(random < 0.6){
+                baseGoogleMap.hideMarker(i)
+            }
+        }
     }
 }

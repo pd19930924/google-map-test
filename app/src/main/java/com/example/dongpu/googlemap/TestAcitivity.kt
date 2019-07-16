@@ -43,6 +43,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var startDefualtClusterBtn : Button
     private lateinit var startClusterBtn : Button
     private lateinit var stopClusterBtn : Button
+    private lateinit var hideSomeMarkersBtn : Button
 
     //for map
     private lateinit var mMap: GoogleMap
@@ -157,6 +158,7 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         startDefualtClusterBtn = findViewById(R.id.start_default_cluster)
         startClusterBtn = findViewById(R.id.start_cluster)
         stopClusterBtn = findViewById(R.id.stop_cluster)
+        hideSomeMarkersBtn = findViewById(R.id.hide_some_markers)
         var clusterTest = ClusterTest(applicationContext, baseGoogleMap)
 
         startDefualtClusterBtn.setOnClickListener {
@@ -170,6 +172,8 @@ class TestAcitivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         }
 
         stopClusterBtn.setOnClickListener { clusterTest.stopCluster() }
+
+        hideSomeMarkersBtn.setOnClickListener { clusterTest.hideSomeCluster() }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

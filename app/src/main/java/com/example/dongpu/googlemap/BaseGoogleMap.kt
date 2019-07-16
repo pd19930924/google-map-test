@@ -647,6 +647,10 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    fun getIsStartCluster() : Boolean{
+        return this.isStartCluster
+    }
+
     override fun toString(): String {
         return super.toString()
     }
