@@ -35,20 +35,6 @@ class MarkerTest {
             var marker = baseGoogleMap.addMarkerToMap(latLng)
             index++
         }
-
-        Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
-            override fun run() {
-                Log.d("pudong","1")
-                baseGoogleMap.hideMarker(1)
-            }
-        },5000)
-
-        Handler(Looper.getMainLooper()).postDelayed(object : Runnable{
-            override fun run() {
-                Log.d("pudong","2")
-                baseGoogleMap.removeMarker(0)
-            }
-        },10000)
     }
 
     fun clickDefaultMarker(marker: Marker){
