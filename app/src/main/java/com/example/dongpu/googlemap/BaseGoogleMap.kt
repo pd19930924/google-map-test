@@ -42,6 +42,7 @@ class BaseGoogleMap : Cloneable {
      * This is used to add a marker to Map
      * @param point the marker that we need to add
      * @param title if title exists, there will be a title if we click marker
+     * @param snippet if snippet exists, there will be a snippet if we click marker
      * @param drawableResouce if drawableResouce exists, marker icon will be replaced to our pic
      * it is an example : addMarkerToMap(Latlng(31.1, 32.3), "str" , resouce.getDrawable(R.drawable.pic))
      */
@@ -60,12 +61,12 @@ class BaseGoogleMap : Cloneable {
      * This is used to add a marker to Map, and the diffenrence between this and another "addMarkerToMap" is we used a view to replace our marker pic
      * @param point the marker that we need to add
      * @param title if title exists, there will be a title if we click marker
-     * @param context it is come from our activity, we need it to load our view
+     * @param snippet if snippet exists, there will be a snippet if we click marker
      * @param view marker icon will be replaced to our pic
      * @return return our maker to help us to do other work to marker
      * it is an example :
      * var view = Inflater.from(context).inflater(R.layout.main, null)  //There is a key point, we should initialize our view at first
-     * addMarkerToMap(Latlng(31.1, 32.3), "str" , this, view)
+     * addMarkerToMap(Latlng(31.1, 32.3), "str" , null, view)
      */
     fun addMarkerToMap(point : LatLng, title : String? = null, snippet : String? = null, view : View) : Marker{
         var bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(createBitmapFromView(view))
@@ -90,10 +91,6 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
-     * @param position
-     * @param title
-     * @param snippet
-     * @param icon
      * @return our markerOptions
      */
     @JvmOverloads
@@ -120,9 +117,7 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
-     * if we are in cluster, and we need add marker, then we need to refresh marker in our cluster
-     * @param marker
-     * @param markerOptions
+     * if we are in cluster, and we need adding marker, then we need to refresh marker in our cluster
      */
     private fun needClusterWhenAddMarker(marker: Marker, markerOptions: MarkerOptions){
         //if we open the state that we need cluster map, then we will hide marker and add item to clusterManager
@@ -206,6 +201,9 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    /**
+     * if we are in cluster, and we need showing hide marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenShowMarker(index : Int){
         if(index <= 0 || index >= clusterItemList.size) return
         var currentMyItem = clusterItemList.get(index)
@@ -247,7 +245,7 @@ class BaseGoogleMap : Cloneable {
      * @param index it is which index of our marker
      */
     fun hideMarker(index : Int) : Marker?{
-        if(markerList.size < index){
+        if(markerList.size <= index){
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return null
         }
@@ -283,6 +281,9 @@ class BaseGoogleMap : Cloneable {
         return marker
     }
 
+    /**
+     * if we are in cluster, and we need hiding marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenHideMarker(index : Int){
         var currentMyItem = clusterItemList.get(index)
         if(currentMyItem == null) return   //we have removed the item
@@ -366,6 +367,9 @@ class BaseGoogleMap : Cloneable {
         return true
     }
 
+    /**
+     * if we are in cluster, and we need removing marker, we need to refresh marker in our cluster
+     */
     private fun needClusterWhenRemoveMarker(index: Int){
         var currentMyItem = clusterItemList.get(index)
         if(currentMyItem == null) return
@@ -539,7 +543,7 @@ class BaseGoogleMap : Cloneable {
     fun startCluster(context : Context, showAnimation : Boolean = false,
                      onClusterClickListener: ClusterManager.OnClusterClickListener<MyItem>? = null,
                      onMarkerClickListener: GoogleMap.OnMarkerClickListener? = null){
-        if(isStartCluster)return   //if we have started cluster, will will never start it again
+        if(isStartCluster)return   //if we have started cluster, we will never start it again
         isStartCluster = true
 
         clusterManger = ClusterManager<MyItem>(context, getGoogleMap())
@@ -589,6 +593,9 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    /**
+     * This is used for special situation , when we start cluster, we need hiding all marker we have put before
+     */
     private fun hideMarkerWhenClustering(index: Int){
         var marker = markerList.get(index)
         marker.isVisible = false
@@ -641,6 +648,10 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    fun getIsStartCluster() : Boolean{
+        return this.isStartCluster
+    }
+
     override fun toString(): String {
         return super.toString()
     }
@@ -667,6 +678,106 @@ class BaseGoogleMap : Cloneable {
         return r
     }
 
+    /**
+     * we can cal distance between 2 latlngs
+     * @param latLng1
+     * @param latLng2
+     * @return distance
+     */
+    fun distanceBetween(latLng1 : LatLng, latLng2: LatLng) : Float{
+        // Based on http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
+        // using the "Inverse Formula" (section 4)
+
+        var lat1 = latLng1.latitude
+        var lon1 = latLng1.longitude
+
+        var lat2 = latLng1.latitude
+        var lon2 = latLng1.longitude
+
+        val MAXITERS = 20
+        // Convert lat/long to radians
+        lat1 *= Math.PI / 180.0
+        lat2 *= Math.PI / 180.0
+        lon1 *= Math.PI / 180.0
+        lon2 *= Math.PI / 180.0
+
+        val a = 6378137.0 // WGS84 major axis
+        val b = 6356752.3142 // WGS84 semi-major axis
+        val f = (a - b) / a
+        val aSqMinusBSqOverBSq = (a * a - b * b) / (b * b)
+
+        val L = lon2 - lon1
+        var A = 0.0
+        val U1 = Math.atan((1.0 - f) * Math.tan(lat1))
+        val U2 = Math.atan((1.0 - f) * Math.tan(lat2))
+
+        val cosU1 = Math.cos(U1)
+        val cosU2 = Math.cos(U2)
+        val sinU1 = Math.sin(U1)
+        val sinU2 = Math.sin(U2)
+        val cosU1cosU2 = cosU1 * cosU2
+        val sinU1sinU2 = sinU1 * sinU2
+
+        var sigma = 0.0
+        var deltaSigma = 0.0
+        var cosSqAlpha = 0.0
+        var cos2SM = 0.0
+        var cosSigma = 0.0
+        var sinSigma = 0.0
+        var cosLambda = 0.0
+        var sinLambda = 0.0
+
+        var lambda = L // initial guess
+        for (iter in 0 until MAXITERS) {
+            val lambdaOrig = lambda
+            cosLambda = Math.cos(lambda)
+            sinLambda = Math.sin(lambda)
+            val t1 = cosU2 * sinLambda
+            val t2 = cosU1 * sinU2 - sinU1 * cosU2 * cosLambda
+            val sinSqSigma = t1 * t1 + t2 * t2 // (14)
+            sinSigma = Math.sqrt(sinSqSigma)
+            cosSigma = sinU1sinU2 + cosU1cosU2 * cosLambda // (15)
+            sigma = Math.atan2(sinSigma, cosSigma) // (16)
+            val sinAlpha = if (sinSigma == 0.0)
+                0.0
+            else
+                cosU1cosU2 * sinLambda / sinSigma // (17)
+            cosSqAlpha = 1.0 - sinAlpha * sinAlpha
+            cos2SM = if (cosSqAlpha == 0.0)
+                0.0
+            else
+                cosSigma - 2.0 * sinU1sinU2 / cosSqAlpha // (18)
+
+            val uSquared = cosSqAlpha * aSqMinusBSqOverBSq // defn
+            A = 1 + uSquared / 16384.0 * // (3)
+                    (4096.0 + uSquared * (-768 + uSquared * (320.0 - 175.0 * uSquared)))
+            val B = uSquared / 1024.0 * // (4)
+                    (256.0 + uSquared * (-128.0 + uSquared * (74.0 - 47.0 * uSquared)))
+            val C = f / 16.0 *
+                    cosSqAlpha *
+                    (4.0 + f * (4.0 - 3.0 * cosSqAlpha)) // (10)
+            val cos2SMSq = cos2SM * cos2SM
+            deltaSigma = B * sinSigma * // (6)
+
+                    (cos2SM + B / 4.0 * (cosSigma * (-1.0 + 2.0 * cos2SMSq) - B / 6.0 * cos2SM *
+                            (-3.0 + 4.0 * sinSigma * sinSigma) *
+                            (-3.0 + 4.0 * cos2SMSq)))
+
+            lambda = L + (1.0 - C) * f * sinAlpha *
+                    (sigma + C * sinSigma *
+                            (cos2SM + C * cosSigma *
+                                    (-1.0 + 2.0 * cos2SM * cos2SM))) // (11)
+
+            val delta = (lambda - lambdaOrig) / lambda
+            if (Math.abs(delta) < 1.0e-12) {
+                break
+            }
+        }
+
+        val distance = (b * A * (sigma - deltaSigma)).toFloat()
+        return distance
+    }
+
     companion object {
         val TAG = "BaseGoogleMap"
         val LATLNG_NOT_EXIST_ERROR = "The position is not exisiting"
@@ -676,7 +787,6 @@ class BaseGoogleMap : Cloneable {
     }
 
     class MyItem : ClusterItem {
-
         private var mPosition : LatLng? = null
         private var mSnippet : String? = null
         private var mTitle : String? = null
@@ -702,7 +812,6 @@ class BaseGoogleMap : Cloneable {
         override fun getTitle(): String? {
             return mTitle
         }
-
     }
 
     class MyItemRenderer : DefaultClusterRenderer<MyItem> {

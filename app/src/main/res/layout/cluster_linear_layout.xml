@@ -41,4 +41,17 @@
         android:textAllCaps="false"
         android:textSize="16sp" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/hide_some_markers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/hide_some_markers"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
 </LinearLayout>
