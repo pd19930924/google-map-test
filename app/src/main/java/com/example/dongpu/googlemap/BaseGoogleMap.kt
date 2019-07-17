@@ -42,6 +42,7 @@ class BaseGoogleMap : Cloneable {
      * This is used to add a marker to Map
      * @param point the marker that we need to add
      * @param title if title exists, there will be a title if we click marker
+     * @param snippet if snippet exists, there will be a snippet if we click marker
      * @param drawableResouce if drawableResouce exists, marker icon will be replaced to our pic
      * it is an example : addMarkerToMap(Latlng(31.1, 32.3), "str" , resouce.getDrawable(R.drawable.pic))
      */
@@ -244,7 +245,7 @@ class BaseGoogleMap : Cloneable {
      * @param index it is which index of our marker
      */
     fun hideMarker(index : Int) : Marker?{
-        if(markerList.size < index){
+        if(markerList.size <= index){
             Log.e(TAG, INDEX_OUT_OF_RANGE_ERROR)
             return null
         }

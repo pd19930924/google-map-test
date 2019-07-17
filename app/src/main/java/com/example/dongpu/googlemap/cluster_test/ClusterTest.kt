@@ -51,9 +51,8 @@ class ClusterTest {
 
     fun hideSomeCluster(){
         if(!baseGoogleMap.getIsStartCluster()) return  //we must make sure tha we have begin cluster
-        var stack = Stack<Int>()
         var size = baseGoogleMap.getMarkerList().size
-        for(i in 0..size){
+        for(i in 0..(size-1)){
             var random = Random().nextDouble()
             if(random < 0.6){
                 baseGoogleMap.hideMarker(i)
