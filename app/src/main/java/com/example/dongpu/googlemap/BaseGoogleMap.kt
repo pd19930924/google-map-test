@@ -396,6 +396,26 @@ class BaseGoogleMap : Cloneable {
     }
 
     /**
+     * drawa a rectangle on map
+     * @param latLng1
+     * @param latLng2
+     */
+    fun drawRectangleOnMap(latLng1: LatLng, latLng2: LatLng, color: Int? = null){
+        var lat1 = latLng1.latitude
+        var lat2 = latLng2.latitude
+        var lng1 = latLng1.longitude
+        var lng2 = latLng2.longitude
+        var d1 = LatLng(lat1, lng1)
+        var d2 = LatLng(lat1, lng2)
+        var d3 = LatLng(lat2, lng2)
+        var d4 = LatLng(lat2, lng1)
+
+        var polylineOptions = PolylineOptions()
+        polylineOptions.add(d1, d2, d3, d4, d1)
+        mMap.addPolyline(polylineOptions)
+    }
+
+    /**
      * we can move camera to a assign location(latitude, longtitude)
      * @param latLng
      */
