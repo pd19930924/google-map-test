@@ -61,12 +61,12 @@ class BaseGoogleMap : Cloneable {
      * This is used to add a marker to Map, and the diffenrence between this and another "addMarkerToMap" is we used a view to replace our marker pic
      * @param point the marker that we need to add
      * @param title if title exists, there will be a title if we click marker
-     * @param context it is come from our activity, we need it to load our view
+     * @param snippet if snippet exists, there will be a snippet if we click marker
      * @param view marker icon will be replaced to our pic
      * @return return our maker to help us to do other work to marker
      * it is an example :
      * var view = Inflater.from(context).inflater(R.layout.main, null)  //There is a key point, we should initialize our view at first
-     * addMarkerToMap(Latlng(31.1, 32.3), "str" , this, view)
+     * addMarkerToMap(Latlng(31.1, 32.3), "str" , null, view)
      */
     fun addMarkerToMap(point : LatLng, title : String? = null, snippet : String? = null, view : View) : Marker{
         var bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(createBitmapFromView(view))
