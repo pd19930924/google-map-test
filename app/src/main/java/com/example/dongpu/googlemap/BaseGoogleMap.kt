@@ -423,18 +423,26 @@ class BaseGoogleMap : Cloneable {
     fun setOnManyMarkerClick(){
         mMap.setOnMarkerClickListener {
             var diff = 5f
+            var center : LatLng
             if(lastMarker == null){
                 lastMarker = it
                 markerOverlyingList = LinkedList<Marker>()
+                center = it.position
             }else{
-
-                var center = lastMarker!!.position
-                var northeast = LatLng(center.latitude + diff, center.longitude+ diff)
-                var southwest = LatLng(center.latitude - diff, center.longitude - diff)
-                if(containsMarker(it.position, southwest, northeast)){
-
-                }
+                center = lastMarker!!.position
             }
+            var southwest = LatLng(center.latitude - diff, center.longitude - diff)
+            var northeast = LatLng(center.latitude + diff, center.longitude+ diff)
+            if(containsMarker(it.position, southwest, northeast)){
+                var firstMarker = markerOverlyingList!!.pop()
+                markerOverlyingList!!.push(firstMarker)
+                return@setOnMarkerClickListener true
+            }
+            for(marker in markerList){
+                if(it.equals(marker))continue
+                if(containsMarker(it.position, southwest, northeast))markerOverlyingList!!.push(marker)
+            }
+            markerOverlyingList!!.push(it)
             return@setOnMarkerClickListener true
         }
     }
