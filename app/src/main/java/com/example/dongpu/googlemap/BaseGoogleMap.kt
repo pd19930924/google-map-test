@@ -14,6 +14,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -31,6 +32,10 @@ class BaseGoogleMap : Cloneable {
 
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
+
+    //This is used in many marker click event
+    private var lastMarker : Marker? = null
+    private var markerOverlyingList : LinkedList<Marker>? = null
 
     constructor(mMap: GoogleMap){
         this.mMap = mMap
@@ -413,6 +418,34 @@ class BaseGoogleMap : Cloneable {
         var polylineOptions = PolylineOptions()
         polylineOptions.add(d1, d2, d3, d4, d1)
         mMap.addPolyline(polylineOptions)
+    }
+
+    fun setOnManyMarkerClick(){
+        mMap.setOnMarkerClickListener {
+            var diff = 5f
+            if(lastMarker == null){
+                lastMarker = it
+                markerOverlyingList = LinkedList<Marker>()
+            }else{
+
+                var center = lastMarker!!.position
+                var northeast = LatLng(center.latitude + diff, center.longitude+ diff)
+                var southwest = LatLng(center.latitude - diff, center.longitude - diff)
+                if(containsMarker(it.position, southwest, northeast)){
+
+                }
+            }
+            return@setOnMarkerClickListener true
+        }
+    }
+
+    private fun containsMarker(latLng: LatLng, southwest : LatLng, northeast : LatLng) : Boolean{
+        var lat = latLng.latitude
+        var lng = latLng.longitude
+
+        var isLatContains = southwest.latitude <= lat && lat <= northeast.latitude
+        var isLngContains = southwest.longitude <= lng && lng <= northeast.longitude
+        return isLatContains && isLngContains
     }
 
     /**
