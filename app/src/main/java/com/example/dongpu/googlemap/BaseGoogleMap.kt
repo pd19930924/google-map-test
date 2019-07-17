@@ -34,7 +34,7 @@ class BaseGoogleMap : Cloneable {
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
 
     //This is used in many marker click event
-    private var lastMarker : Marker? = null
+    private var lastBounds : LatLng? = null
     private var markerOverlyingList : LinkedList<Marker>? = null
 
     constructor(mMap: GoogleMap){
@@ -421,28 +421,13 @@ class BaseGoogleMap : Cloneable {
     }
 
     fun setOnManyMarkerClick(){
+        //新建一个区域，在这个区域内，我们点击的时候是一个个弹的，超出区域重新计算
         mMap.setOnMarkerClickListener {
             var diff = 5f
-            var center : LatLng
-            if(lastMarker == null){
-                lastMarker = it
-                markerOverlyingList = LinkedList<Marker>()
-                center = it.position
+            if(lastBounds == null){
             }else{
-                center = lastMarker!!.position
+
             }
-            var southwest = LatLng(center.latitude - diff, center.longitude - diff)
-            var northeast = LatLng(center.latitude + diff, center.longitude+ diff)
-            if(containsMarker(it.position, southwest, northeast)){
-                var firstMarker = markerOverlyingList!!.pop()
-                markerOverlyingList!!.push(firstMarker)
-                return@setOnMarkerClickListener true
-            }
-            for(marker in markerList){
-                if(it.equals(marker))continue
-                if(containsMarker(it.position, southwest, northeast))markerOverlyingList!!.push(marker)
-            }
-            markerOverlyingList!!.push(it)
             return@setOnMarkerClickListener true
         }
     }
