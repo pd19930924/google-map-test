@@ -35,6 +35,7 @@ open class BaseGoogleMap : Cloneable {
 
     //This is used in overlying marker click event
     private var lastBounds : LatLngBounds? = null
+    private var lastZoom : Float = 0f
     private var markerOverlyingList : LinkedList<Marker>? = null
 
     constructor(mMap: GoogleMap){
@@ -423,14 +424,17 @@ open class BaseGoogleMap : Cloneable {
     fun setOnCirculateMarkerClick(){
         //新建一个区域，在这个区域内，我们点击的时候是一个个弹的，超出区域重新计算
         mMap.setOnMarkerClickListener {
+            var currentZoom = getZoom()
             //一开始我们先确定一下当前是否是第一次点击
             if(lastBounds == null){
                 //是第一次点击，那么初始化linkedList，初始化lastbounds
                 markerOverlyingList = LinkedList()
                 createMarkerOverlyingList(it)
+                lastZoom = currentZoom
+                markerClickedState(it)
             }else{
                 //如果包含了，我们就一个个弹出
-                if(lastBounds!!.contains(it.position)){
+                if(lastBounds!!.contains(it.position) && currentZoom.equals(lastZoom)){
                     if(markerOverlyingList!!.isEmpty() || markerOverlyingList!!.size == 1)return@setOnMarkerClickListener true
                     var lastMarker = markerOverlyingList!!.last
                     markerClickedStateCancel(lastMarker)
@@ -441,6 +445,7 @@ open class BaseGoogleMap : Cloneable {
                     markerOverlyingList!!.offer(firstMarker)
                 }else{
                     createMarkerOverlyingList(it)
+                    markerClickedState(it)
                 }
             }
             return@setOnMarkerClickListener true
@@ -483,6 +488,7 @@ open class BaseGoogleMap : Cloneable {
             }
         }
         markerOverlyingList!!.offer(marker)
+        drawRectangleOnMap(southwest, northeast)
     }
 
     /**
