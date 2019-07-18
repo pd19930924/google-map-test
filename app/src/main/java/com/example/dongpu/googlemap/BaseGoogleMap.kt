@@ -519,8 +519,7 @@ open class BaseGoogleMap : Cloneable {
                 lastMarker = it
             }else{
                 if(lastMarker!!.equals(it)) return@setOnMarkerClickListener true
-                lastMarker!!.zIndex = 0f
-                markerClickedStateCancel(it)
+                markerClickedStateCancel(lastMarker!!)
                 lastMarker = it
             }
             markerClickedState(it)
