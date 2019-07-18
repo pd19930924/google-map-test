@@ -35,9 +35,6 @@ class MarkerTest {
             var marker = baseGoogleMap.addMarkerToMap(latLng)
             index++
         }
-        baseGoogleMap.setCameraZoom(8f)
-        baseGoogleMap.setOnCirculateMarkerClick()
-        //baseGoogleMap.getMarkerList().get(5).zIndex = 10f
     }
 
     fun clickDefaultMarker(marker: Marker){
@@ -55,7 +52,6 @@ class MarkerTest {
         for(latLng in latLngList){
             baseGoogleMap.addMarkerToMap(latLng, null, null, R.drawable.ic_parking_green)
         }
-        baseGoogleMap.setCameraZoom(6f)
     }
 
     fun clickDrawableMarker(marker: Marker){
