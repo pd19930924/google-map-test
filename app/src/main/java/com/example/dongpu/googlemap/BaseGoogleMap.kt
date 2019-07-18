@@ -6,7 +6,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -37,6 +40,9 @@ open class BaseGoogleMap : Cloneable {
     private var lastBounds : LatLngBounds? = null
     private var lastZoom : Float = 0f
     private var markerOverlyingList : LinkedList<Marker>? = null
+
+    //This is used in setOnMarkerClick
+    private var lastMarker : Marker? = null
 
     constructor(mMap: GoogleMap){
         this.mMap = mMap
@@ -505,6 +511,21 @@ open class BaseGoogleMap : Cloneable {
         }
         markerOverlyingList!!.offer(marker)
         drawRectangleOnMap(southwest, northeast)
+    }
+
+    fun setOnMarkerClick(){
+        mMap.setOnMarkerClickListener {
+            if(lastMarker == null){
+                lastMarker = it
+            }else{
+                if(lastMarker!!.equals(it)) return@setOnMarkerClickListener true
+                lastMarker!!.zIndex = 0f
+                markerClickedStateCancel(it)
+                lastMarker = it
+            }
+            markerClickedState(it)
+            return@setOnMarkerClickListener true
+        }
     }
 
     /**
