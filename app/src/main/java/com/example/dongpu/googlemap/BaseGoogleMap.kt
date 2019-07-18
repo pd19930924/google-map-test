@@ -33,7 +33,7 @@ open class BaseGoogleMap : Cloneable {
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
 
-    //This is used in many marker click event
+    //This is used in overlying marker click event
     private var lastBounds : LatLngBounds? = null
     private var markerOverlyingList : LinkedList<Marker>? = null
 
@@ -428,8 +428,6 @@ open class BaseGoogleMap : Cloneable {
                 //是第一次点击，那么初始化linkedList，初始化lastbounds
                 markerOverlyingList = LinkedList()
                 createMarkerOverlyingList(it)
-
-                drawRectangleOnMap(lastBounds!!.southwest, lastBounds!!.northeast)
             }else{
                 //如果包含了，我们就一个个弹出
                 if(lastBounds!!.contains(it.position)){
@@ -443,7 +441,6 @@ open class BaseGoogleMap : Cloneable {
                     markerOverlyingList!!.offer(firstMarker)
                 }else{
                     createMarkerOverlyingList(it)
-                    drawRectangleOnMap(lastBounds!!.southwest, lastBounds!!.northeast)
                 }
             }
             return@setOnMarkerClickListener true
@@ -468,7 +465,11 @@ open class BaseGoogleMap : Cloneable {
 
     private fun createMarkerOverlyingList(marker: Marker){
         markerOverlyingList!!.clear()
-        var diff = 5f
+        //zoom = 2f  diff = 1f
+        //zoom = 3f diff = 0.7f
+        //zoom = 4f diff = 0.35f
+        //continue...
+        var diff = 1f/Math.pow(1.55, (getZoom() - 2).toDouble())  //this is come from test, you can change the value
         var centerLatLng = marker.position
         var centerLat = centerLatLng.latitude
         var centerLng = centerLatLng.longitude
