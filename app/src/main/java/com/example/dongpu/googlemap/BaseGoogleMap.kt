@@ -14,12 +14,13 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
  * Created by dong.pu on 2019/6/26.
  */
-class BaseGoogleMap : Cloneable {
+open class BaseGoogleMap : Cloneable {
 
     private lateinit var mMap : GoogleMap
 
@@ -31,6 +32,11 @@ class BaseGoogleMap : Cloneable {
 
     private var isForbidOrLimitCameraMovement : Boolean = false  //it is used to judge whether we have use limitCameraMove or forbidCameraMove
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
+
+    //This is used in overlying marker click event
+    private var lastBounds : LatLngBounds? = null
+    private var lastZoom : Float = 0f
+    private var markerOverlyingList : LinkedList<Marker>? = null
 
     constructor(mMap: GoogleMap){
         this.mMap = mMap
@@ -393,6 +399,112 @@ class BaseGoogleMap : Cloneable {
         if(color != null) circleOptions.strokeColor(color)
         var circle = mMap.addCircle(circleOptions)
         return circle
+    }
+
+    /**
+     * drawa a rectangle on map
+     * @param latLng1
+     * @param latLng2
+     */
+    fun drawRectangleOnMap(latLng1: LatLng, latLng2: LatLng, color: Int? = null){
+        var lat1 = latLng1.latitude
+        var lat2 = latLng2.latitude
+        var lng1 = latLng1.longitude
+        var lng2 = latLng2.longitude
+        var d1 = LatLng(lat1, lng1)
+        var d2 = LatLng(lat1, lng2)
+        var d3 = LatLng(lat2, lng2)
+        var d4 = LatLng(lat2, lng1)
+
+        var polylineOptions = PolylineOptions()
+        polylineOptions.add(d1, d2, d3, d4, d1)
+        mMap.addPolyline(polylineOptions)
+    }
+
+    /**
+     * This is for the marker is together in a place, and if you click, the map may show a marker
+     * and if we click again, it will not show the others, so I make the function to make sure that
+     * these markers will show in circle if you try to click the same place
+     * but I recommand the cluster(There are already a method in the class, named startCluster) if there are so many markers
+     */
+    fun setOnCirculateMarkerClick(){
+        //if we click one place, we will build a small bound, and put some markers contained in bound to LinkdList
+        mMap.setOnMarkerClickListener {
+            var currentZoom = getZoom()
+            //if we does not click it , we need initializing something
+            if(lastBounds == null){
+                markerOverlyingList = LinkedList()
+                createMarkerOverlyingList(it)
+                lastZoom = currentZoom
+                markerClickedState(it)
+            }else{
+                //we must make sure that we have contained point, if not, we should recalculator the bound and markers
+                //if our zoom changed, bound changed, so we also need to recalculating our markers
+                if(lastBounds!!.contains(it.position) && currentZoom.equals(lastZoom)){
+                    if(markerOverlyingList!!.isEmpty() || markerOverlyingList!!.size == 1)return@setOnMarkerClickListener true
+                    var lastMarker = markerOverlyingList!!.last
+                    markerClickedStateCancel(lastMarker)
+
+                    var firstMarker = markerOverlyingList!!.pop()
+                    markerClickedState(firstMarker)
+
+                    markerOverlyingList!!.offer(firstMarker)
+                }else{
+                    createMarkerOverlyingList(it)
+                    markerClickedState(it)
+                }
+            }
+            return@setOnMarkerClickListener true
+        }
+    }
+
+    /**
+     * if we need to cancel our click state, we should override it
+     * @param marker
+     */
+    open fun markerClickedStateCancel(marker: Marker){
+        marker.zIndex = 0f
+    }
+
+    /**
+     * if we need to show our click state, we should override it
+     * @param marker
+     */
+    open fun markerClickedState(marker: Marker){
+        marker.zIndex = 2f
+    }
+
+    /**
+     * This is used to make markerOverlyingList, if we click the same place, markers will show in circle
+     *
+     * but here I used a stupid way, if marker we clicked is our of our bounds or zoom have changed, I will compare all markers,
+     * and then put markers that contained in bound into a LinkedList(named markerOverlyingList), once I change the place , or change the zoom
+     * the function will be loaded again, There must be some optimization, if you find some way better to handle the problem, please contanct me.
+     * Thank you very much
+     *
+     * @param marker
+     */
+    private fun createMarkerOverlyingList(marker: Marker){
+        markerOverlyingList!!.clear()
+        //zoom = 2f  diff = 1f
+        //zoom = 3f diff = 0.7f
+        //zoom = 4f diff = 0.35f
+        //continue...
+        var diff = 1f/Math.pow(1.55, (getZoom() - 2).toDouble())  //this is come from test, you can change the value
+        var centerLatLng = marker.position
+        var centerLat = centerLatLng.latitude
+        var centerLng = centerLatLng.longitude
+        var southwest = LatLng(centerLat - diff, centerLng - diff)
+        var northeast = LatLng(centerLat + diff, centerLng + diff)
+        lastBounds = LatLngBounds(southwest, northeast)
+        markerList.forEach {
+            if(it.equals(marker))return@forEach
+            if(lastBounds!!.contains(it.position)){
+                markerOverlyingList!!.offer(it)
+            }
+        }
+        markerOverlyingList!!.offer(marker)
+        drawRectangleOnMap(southwest, northeast)
     }
 
     /**
