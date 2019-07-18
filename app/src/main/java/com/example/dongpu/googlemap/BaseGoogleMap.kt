@@ -34,7 +34,7 @@ class BaseGoogleMap : Cloneable {
     private var isStartCluster : Boolean = false //it is used to judge whether we have start cluster
 
     //This is used in many marker click event
-    private var lastBounds : LatLng? = null
+    private var lastBounds : LatLngBounds? = null
     private var markerOverlyingList : LinkedList<Marker>? = null
 
     constructor(mMap: GoogleMap){
@@ -424,21 +424,47 @@ class BaseGoogleMap : Cloneable {
         //新建一个区域，在这个区域内，我们点击的时候是一个个弹的，超出区域重新计算
         mMap.setOnMarkerClickListener {
             var diff = 5f
+            //一开始我们先确定一下当前是否是第一次点击
             if(lastBounds == null){
+                //是第一次点击，那么初始化linkedList，初始化lastbounds
+                markerOverlyingList = LinkedList()
+                createMarkerOverlyingList(it)
+                drawRectangleOnMap(lastBounds!!.southwest, lastBounds!!.northeast)
+                it.zIndex = 6f
             }else{
-
+                //如果包含了，我们就一个个弹出
+                if(lastBounds!!.contains(it.position)){
+                    if(markerOverlyingList!!.isEmpty())return@setOnMarkerClickListener true
+                    markerOverlyingList!!.last.zIndex = 0f
+                    markerOverlyingList!!.last.setIcon(null)
+                    var firstMarker = markerOverlyingList!!.pop()
+                    firstMarker.zIndex = 6f
+                    firstMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_red))
+                    markerOverlyingList!!.offer(firstMarker)
+                }else{
+                    createMarkerOverlyingList(it)
+                    drawRectangleOnMap(lastBounds!!.southwest, lastBounds!!.northeast)
+                }
             }
             return@setOnMarkerClickListener true
         }
     }
 
-    private fun containsMarker(latLng: LatLng, southwest : LatLng, northeast : LatLng) : Boolean{
-        var lat = latLng.latitude
-        var lng = latLng.longitude
-
-        var isLatContains = southwest.latitude <= lat && lat <= northeast.latitude
-        var isLngContains = southwest.longitude <= lng && lng <= northeast.longitude
-        return isLatContains && isLngContains
+    private fun createMarkerOverlyingList(marker: Marker){
+        var diff = 5f
+        var centerLatLng = marker.position
+        var centerLat = centerLatLng.latitude
+        var centerLng = centerLatLng.longitude
+        var southwest = LatLng(centerLat - diff, centerLng - diff)
+        var northeast = LatLng(centerLat + diff, centerLng + diff)
+        lastBounds = LatLngBounds(southwest, northeast)
+        markerList.forEach {
+            if(it.equals(marker))return@forEach
+            if(lastBounds!!.contains(it.position)){
+                markerOverlyingList!!.offer(it)
+            }
+        }
+        markerOverlyingList!!.offer(marker)
     }
 
     /**

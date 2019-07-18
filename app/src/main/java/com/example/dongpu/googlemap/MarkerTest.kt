@@ -35,6 +35,8 @@ class MarkerTest {
             var marker = baseGoogleMap.addMarkerToMap(latLng)
             index++
         }
+        baseGoogleMap.setOnManyMarkerClick()
+        //baseGoogleMap.getMarkerList().get(5).zIndex = 10f
     }
 
     fun clickDefaultMarker(marker: Marker){
