@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by dong.pu on 2019/6/26.
  */
-class BaseGoogleMap : Cloneable {
+open class BaseGoogleMap : Cloneable {
 
     private lateinit var mMap : GoogleMap
 
@@ -420,26 +420,26 @@ class BaseGoogleMap : Cloneable {
         mMap.addPolyline(polylineOptions)
     }
 
-    fun setOnManyMarkerClick(){
+    fun setOnCirculateMarkerClick(){
         //新建一个区域，在这个区域内，我们点击的时候是一个个弹的，超出区域重新计算
         mMap.setOnMarkerClickListener {
-            var diff = 5f
             //一开始我们先确定一下当前是否是第一次点击
             if(lastBounds == null){
                 //是第一次点击，那么初始化linkedList，初始化lastbounds
                 markerOverlyingList = LinkedList()
                 createMarkerOverlyingList(it)
+
                 drawRectangleOnMap(lastBounds!!.southwest, lastBounds!!.northeast)
-                it.zIndex = 6f
             }else{
                 //如果包含了，我们就一个个弹出
                 if(lastBounds!!.contains(it.position)){
-                    if(markerOverlyingList!!.isEmpty())return@setOnMarkerClickListener true
-                    markerOverlyingList!!.last.zIndex = 0f
-                    markerOverlyingList!!.last.setIcon(null)
+                    if(markerOverlyingList!!.isEmpty() || markerOverlyingList!!.size == 1)return@setOnMarkerClickListener true
+                    var lastMarker = markerOverlyingList!!.last
+                    markerClickedStateCancel(lastMarker)
+
                     var firstMarker = markerOverlyingList!!.pop()
-                    firstMarker.zIndex = 6f
-                    firstMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_parking_red))
+                    markerClickedState(firstMarker)
+
                     markerOverlyingList!!.offer(firstMarker)
                 }else{
                     createMarkerOverlyingList(it)
@@ -450,7 +450,24 @@ class BaseGoogleMap : Cloneable {
         }
     }
 
+    /**
+     * if we need to cancel our click state, we should override it
+     * @param marker
+     */
+    open fun markerClickedStateCancel(marker: Marker){
+        marker.zIndex = 0f
+    }
+
+    /**
+     * if we need to show our click state, we should override it
+     * @param marker
+     */
+    open fun markerClickedState(marker: Marker){
+        marker.zIndex = 2f
+    }
+
     private fun createMarkerOverlyingList(marker: Marker){
+        markerOverlyingList!!.clear()
         var diff = 5f
         var centerLatLng = marker.position
         var centerLat = centerLatLng.latitude
