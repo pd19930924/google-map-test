@@ -421,19 +421,25 @@ open class BaseGoogleMap : Cloneable {
         mMap.addPolyline(polylineOptions)
     }
 
+    /**
+     * This is for the marker is together in a place, and if you click, the map may show a marker
+     * and if we click again, it will not show the others, so I make the function to make sure that
+     * these markers will show in circle if you try to click the same place
+     * but I recommand the cluster(There are already a method in the class, named startCluster) if there are so many markers
+     */
     fun setOnCirculateMarkerClick(){
-        //新建一个区域，在这个区域内，我们点击的时候是一个个弹的，超出区域重新计算
+        //if we click one place, we will build a small bound, and put some markers contained in bound to LinkdList
         mMap.setOnMarkerClickListener {
             var currentZoom = getZoom()
-            //一开始我们先确定一下当前是否是第一次点击
+            //if we does not click it , we need initializing something
             if(lastBounds == null){
-                //是第一次点击，那么初始化linkedList，初始化lastbounds
                 markerOverlyingList = LinkedList()
                 createMarkerOverlyingList(it)
                 lastZoom = currentZoom
                 markerClickedState(it)
             }else{
-                //如果包含了，我们就一个个弹出
+                //we must make sure that we have contained point, if not, we should recalculator the bound and markers
+                //if our zoom changed, bound changed, so we also need to recalculating our markers
                 if(lastBounds!!.contains(it.position) && currentZoom.equals(lastZoom)){
                     if(markerOverlyingList!!.isEmpty() || markerOverlyingList!!.size == 1)return@setOnMarkerClickListener true
                     var lastMarker = markerOverlyingList!!.last
@@ -468,6 +474,16 @@ open class BaseGoogleMap : Cloneable {
         marker.zIndex = 2f
     }
 
+    /**
+     * This is used to make markerOverlyingList, if we click the same place, markers will show in circle
+     *
+     * but here I used a stupid way, if marker we clicked is our of our bounds or zoom have changed, I will compare all markers,
+     * and then put markers that contained in bound into a LinkedList(named markerOverlyingList), once I change the place , or change the zoom
+     * the function will be loaded again, There must be some optimization, if you find some way better to handle the problem, please contanct me.
+     * Thank you very much
+     *
+     * @param marker
+     */
     private fun createMarkerOverlyingList(marker: Marker){
         markerOverlyingList!!.clear()
         //zoom = 2f  diff = 1f
