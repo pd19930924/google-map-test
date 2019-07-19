@@ -59,7 +59,7 @@ open class BaseGoogleMap : Cloneable {
      * it is an example : addMarkerToMap(Latlng(31.1, 32.3), "str" , resouce.getDrawable(R.drawable.pic))
      */
     @JvmOverloads
-    fun addMarkerToMap(point : LatLng, title : String? = null, snippet : String? = null, drawableResouce : Int? = null) : Marker{
+    fun addMarkerToMap(point : LatLng, drawableResouce : Int? = null, title : String? = null, snippet : String? = null) : Marker{
         var bitmapDescriptor : BitmapDescriptor? = null
         if(drawableResouce != null){
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(drawableResouce)
@@ -80,7 +80,7 @@ open class BaseGoogleMap : Cloneable {
      * var view = Inflater.from(context).inflater(R.layout.main, null)  //There is a key point, we should initialize our view at first
      * addMarkerToMap(Latlng(31.1, 32.3), "str" , null, view)
      */
-    fun addMarkerToMap(point : LatLng, title : String? = null, snippet : String? = null, view : View) : Marker{
+    fun addMarkerToMap(point : LatLng, view : View, title : String? = null, snippet : String? = null) : Marker{
         var bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(createBitmapFromView(view))
         var markerOptions = createMarkerOptions(point, title, snippet, bitmapDescriptor)
         var marker = createMarker(markerOptions)

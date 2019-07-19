@@ -50,7 +50,7 @@ class MarkerTest {
 
     fun addDrawableMarkers(){
         for(latLng in latLngList){
-            baseGoogleMap.addMarkerToMap(latLng, null, null, R.drawable.ic_parking_green)
+            baseGoogleMap.addMarkerToMap(latLng,R.drawable.ic_parking_green,null, null)
         }
     }
 
@@ -75,7 +75,7 @@ class MarkerTest {
             var value = view.findViewById<TextView>(R.id.value)
             var background = view.findViewById<LinearLayout>(R.id.background)
             value.text = "value"
-            var marker = baseGoogleMap.addMarkerToMap(latLng, null, null,view)
+            var marker = baseGoogleMap.addMarkerToMap(latLng, view, null, null)
             marker.title = "value"
         }
     }
