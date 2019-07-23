@@ -605,18 +605,19 @@ open class BaseGoogleMap : Cloneable {
         /*
         var url = "http://maps.google.com/maps/api/directions/xml?key=AIzaSyBKC6m9xXKD6x4d9ianrABZOTWTcfEnoB8&origin=23.055291,113.391802" +
                 "&destination=23.046604,113.397510&sensor=false&mode=walking"*/
-        var url = "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyDNBIRUc7pJibERlFRgkyMkur6k0EwnQn4"
+        //here is web in google, but google map direction need a pay, so util now , I will stop searching directions
+        //I have added okhttp to help you get response
+        //https://developers.google.com/maps/documentation/directions/start#auth
+        var url = "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=yourKey"
         var okHttpClient = OkHttpClient()
         var request = Request.Builder().url(url).get().build()
         var call = okHttpClient.newCall(request)
         call.enqueue(object : Callback{
             override fun onResponse(call: Call?, response: Response?) {
-                Log.d("pudong", "success")
-                Log.d("pudong","response = " + response!!.body().string())
+                Log.d(TAG,"response = " + response!!.body().string())
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.d("pudong", "fail")
             }
         })
     }
