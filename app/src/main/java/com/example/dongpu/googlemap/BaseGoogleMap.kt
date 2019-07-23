@@ -17,6 +17,8 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import okhttp3.*
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -599,6 +601,26 @@ open class BaseGoogleMap : Cloneable {
         mMap.setLatLngBoundsForCameraTarget(null)
     }
 
+    fun drawRoutingDirection(){
+        /*
+        var url = "http://maps.google.com/maps/api/directions/xml?key=AIzaSyBKC6m9xXKD6x4d9ianrABZOTWTcfEnoB8&origin=23.055291,113.391802" +
+                "&destination=23.046604,113.397510&sensor=false&mode=walking"*/
+        var url = "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyDNBIRUc7pJibERlFRgkyMkur6k0EwnQn4"
+        var okHttpClient = OkHttpClient()
+        var request = Request.Builder().url(url).get().build()
+        var call = okHttpClient.newCall(request)
+        call.enqueue(object : Callback{
+            override fun onResponse(call: Call?, response: Response?) {
+                Log.d("pudong", "success")
+                Log.d("pudong","response = " + response!!.body().string())
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.d("pudong", "fail")
+            }
+        })
+    }
+
     /**
      * we can use this function to get current zoom of Map
      * @return zoom value
@@ -765,7 +787,7 @@ open class BaseGoogleMap : Cloneable {
      * This is used to change our map into dark night
      * @param context
      */
-    fun changeToNightMode(context: Context){
+    open fun changeToNightMode(context: Context){
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_night_mode_style))
     }
 

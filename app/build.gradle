@@ -39,5 +39,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/gson-2.7.jar')
     compile 'com.google.maps.android:android-maps-utils:0.5'
-    compile(name:'HERE-sdk', ext:'aar')
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.squareup.okio:okio:1.12.0'  
 }

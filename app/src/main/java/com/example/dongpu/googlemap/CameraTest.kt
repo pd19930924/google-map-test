@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.nokia.maps.a.ba
 
 /**
  * Created by dong.pu on 2019/7/10.
