@@ -5,11 +5,15 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationManager
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -19,6 +23,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import okhttp3.*
 import java.io.IOException
+import java.security.Provider
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -931,6 +936,38 @@ open class BaseGoogleMap : Cloneable {
 
         val distance = (b * A * (sigma - deltaSigma)).toFloat()
         return distance
+    }
+
+    fun getCurrentLocation(context: Context) : LatLng?{
+        var locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var locationList = locationManager.getProviders(true)
+
+        val gps = locationList.contains(LocationManager.GPS_PROVIDER)
+        val network = locationList.contains(LocationManager.NETWORK_PROVIDER)
+        val others = (!gps) && (!network)
+
+        var provider : String? = null
+
+        val state = true
+        when(state){
+            gps -> provider = LocationManager.GPS_PROVIDER
+            network -> provider = LocationManager.NETWORK_PROVIDER
+            others -> needGPSOrInternet(context)
+        }
+
+        if(ContextCompat.checkSelfPermission(context, LocationManager.GPS_PROVIDER) != null || ContextCompat.checkSelfPermission(context, LocationManager.NETWORK_PROVIDER) != null){
+            if(provider != null){
+                var location = locationManager.getLastKnownLocation(provider)
+                if(location != null){
+                    return LatLng(location.latitude, location.longitude)
+                }
+            }
+        }
+        return null
+    }
+
+    open fun needGPSOrInternet(context: Context){
+        Toast.makeText(context, "no gps or internet", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
