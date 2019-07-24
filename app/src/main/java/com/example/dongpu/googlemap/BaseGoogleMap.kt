@@ -36,6 +36,7 @@ open class BaseGoogleMap : Cloneable {
 
     private lateinit var markerList : ArrayList<Marker>  //it is used to remove markers, hide markers
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
+    private lateinit var bitmapDescriptorList : ArrayList<BitmapDescriptor>  //it is used to store the data of current bitmap
 
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
     private lateinit var clusterItemList : ArrayList<MyItem?>   //help clusterManger to store item
@@ -55,6 +56,7 @@ open class BaseGoogleMap : Cloneable {
         this.mMap = mMap
         this.markerList = ArrayList<Marker>()
         this.markerOptionsList = ArrayList<MarkerOptions>()
+        this.bitmapDescriptorList = ArrayList<BitmapDescriptor>()
     }
 
     /**
@@ -70,6 +72,7 @@ open class BaseGoogleMap : Cloneable {
         var bitmapDescriptor : BitmapDescriptor? = null
         if(drawableResouce != null){
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(drawableResouce)
+            bitmapDescriptorList.add(bitmapDescriptor)
         }
         var markerOptions = createMarkerOptions(point, title, snippet, bitmapDescriptor)
         var marker = createMarker(markerOptions)
@@ -89,6 +92,7 @@ open class BaseGoogleMap : Cloneable {
      */
     fun addMarkerToMap(point : LatLng, view : View, title : String? = null, snippet : String? = null) : Marker{
         var bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(createBitmapFromView(view))
+        bitmapDescriptorList.add(bitmapDescriptor)
         var markerOptions = createMarkerOptions(point, title, snippet, bitmapDescriptor)
         var marker = createMarker(markerOptions)
         return marker
@@ -718,6 +722,8 @@ open class BaseGoogleMap : Cloneable {
                 return@forEachIndexed //if marker is not visible, we will not add marker to clusterManager
             }
             var markerOptions = markerOptionsList.get(index)
+            markerOptions.draggable(marker.isDraggable)
+            markerOptions.position(marker.position)
             var myItem = MyItem(markerOptions)
             clusterManger.addItem(myItem)
             clusterItemList.add(myItem)
