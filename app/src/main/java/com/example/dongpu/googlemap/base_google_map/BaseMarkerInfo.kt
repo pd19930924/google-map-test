@@ -11,11 +11,15 @@ open class BaseMarkerInfo {
     open var position : LatLng? = null  //The latlng must exist
     var title : String? = null
     var snippets : String? = null
-    var icon : BitmapDescriptor? = null
+
     var isDragable : Boolean = false
     var isShowInfoWindow : Boolean = false
     var tag : Int? = null
 
+    var icon : BitmapDescriptor? = null
+    var iconTag : Int? = null   //This is tag for our pic if we want to change the marker pic after click
+
+    var value : String? = null   //maybe we want to store some info after we click marker
     /*
     override fun equals(other: Any?): Boolean {
         if(other == null) return false
