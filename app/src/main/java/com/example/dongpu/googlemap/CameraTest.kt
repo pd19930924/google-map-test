@@ -1,9 +1,8 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.maps.model.CameraPosition
+import com.example.dongpu.googlemap.base_google_map.BaseGoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 /**

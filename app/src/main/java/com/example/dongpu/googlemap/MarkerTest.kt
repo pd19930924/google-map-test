@@ -1,12 +1,10 @@
 package com.example.dongpu.googlemap
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.dongpu.googlemap.base_google_map.BaseGoogleMap
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng

@@ -1,10 +1,8 @@
 package com.example.dongpu.googlemap.cluster_test
 
 import android.content.Context
-import com.example.dongpu.googlemap.BaseGoogleMap
-import com.google.android.gms.maps.GoogleMap
+import com.example.dongpu.googlemap.base_google_map.BaseGoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.clustering.ClusterManager
 import java.util.*
 
 /**

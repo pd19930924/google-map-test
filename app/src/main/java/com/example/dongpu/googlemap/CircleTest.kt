@@ -1,8 +1,7 @@
 package com.example.dongpu.googlemap
 
-import android.content.Context
+import com.example.dongpu.googlemap.base_google_map.BaseGoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 
 /**
  * Created by dong.pu on 2019/7/8.

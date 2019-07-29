@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import com.example.dongpu.googlemap.base_google_map.BaseGoogleMap
 import com.example.dongpu.googlemap.cluster_test.ClusterTest
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback

@@ -1,29 +1,22 @@
-package com.example.dongpu.googlemap
+package com.example.dongpu.googlemap.base_google_map
 
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.location.Location
 import android.location.LocationManager
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
+import com.example.dongpu.googlemap.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-import com.google.maps.android.clustering.Cluster
-import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import okhttp3.*
 import java.io.IOException
-import java.security.Provider
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -37,6 +30,8 @@ open class BaseGoogleMap : Cloneable {
     private lateinit var markerList : ArrayList<Marker>  //it is used to remove markers, hide markers
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
     private lateinit var bitmapDescriptorList : ArrayList<BitmapDescriptor>  //it is used to store the data of current bitmap
+    private lateinit var markerInfoList : ArrayList<MarkerInfo>
+    private lateinit var picInfoList : ArrayList<BitmapDescriptor>     //it is used to store the pic if we change marker pic
 
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
     private lateinit var clusterItemList : ArrayList<MyItem?>   //help clusterManger to store item
@@ -57,6 +52,8 @@ open class BaseGoogleMap : Cloneable {
         this.markerList = ArrayList<Marker>()
         this.markerOptionsList = ArrayList<MarkerOptions>()
         this.bitmapDescriptorList = ArrayList<BitmapDescriptor>()
+        this.markerInfoList = ArrayList<MarkerInfo>()
+        this.picInfoList = ArrayList<BitmapDescriptor>()
     }
 
     /**
@@ -111,6 +108,10 @@ open class BaseGoogleMap : Cloneable {
             createMarker(markerOptions)
         }
         return markerList
+    }
+
+    open fun setRelatedMarkerInfo(){
+
     }
 
     /**
@@ -982,53 +983,5 @@ open class BaseGoogleMap : Cloneable {
         val MARKET_NOT_EXIST_ERROR = "The marker is not existing"
         val INDEX_OUT_OF_RANGE_ERROR = "The index is out of range"
         val MARKET_NOT_HIDDEN = "The marker has not hidden"
-    }
-
-    class MyItem : ClusterItem {
-        private var mPosition : LatLng? = null
-        private var mSnippet : String? = null
-        private var mTitle : String? = null
-
-        var markerOptions : MarkerOptions? = null
-
-        @JvmOverloads
-        constructor(markerOptions: MarkerOptions){
-            this.mPosition = markerOptions.position
-            this.mTitle = markerOptions.title
-            this.mSnippet = markerOptions.snippet
-            this.markerOptions = markerOptions
-        }
-
-        override fun getPosition(): LatLng {
-            return mPosition!!
-        }
-
-        override fun getSnippet(): String? {
-            return mSnippet
-        }
-
-        override fun getTitle(): String? {
-            return mTitle
-        }
-    }
-
-    class MyItemRenderer : DefaultClusterRenderer<MyItem> {
-
-        constructor( context : Context, mMap: GoogleMap, clusterManager: ClusterManager<MyItem>) : super(context,mMap, clusterManager)
-
-        override fun onBeforeClusterItemRendered(item: MyItem?, markerOptions: MarkerOptions?) {
-            var myMarkerOptions = item!!.markerOptions!!
-            markerOptions!!.title(myMarkerOptions.title)
-            markerOptions!!.snippet(myMarkerOptions.snippet)
-            markerOptions!!.icon(myMarkerOptions.icon)
-        }
-
-        override fun onBeforeClusterRendered(cluster: Cluster<MyItem>?, markerOptions: MarkerOptions?) {
-            super.onBeforeClusterRendered(cluster, markerOptions)  //default pic
-        }
-
-        override fun shouldRenderAsCluster(cluster: Cluster<MyItem>?): Boolean {
-            return cluster!!.size > 1
-        }
     }
 }
