@@ -30,7 +30,6 @@ open class BaseGoogleMap : Cloneable {
     private lateinit var markerList : ArrayList<Marker>  //it is used to remove markers, hide markers
     private lateinit var markerOptionsList : ArrayList<MarkerOptions>  //it is the same with marker , but it's duty is to burden other works, like get icon in makrer
     private lateinit var bitmapDescriptorList : ArrayList<BitmapDescriptor>  //it is used to store the data of current bitmap
-    private lateinit var markerInfoList : ArrayList<BaseMarkerInfo>
     private lateinit var picInfoList : ArrayList<BitmapDescriptor>     //it is used to store the pic if we change marker pic
 
     private lateinit var clusterManger: ClusterManager<MyItem>  //it is used to storage clusterManger
@@ -52,7 +51,6 @@ open class BaseGoogleMap : Cloneable {
         this.markerList = ArrayList<Marker>()
         this.markerOptionsList = ArrayList<MarkerOptions>()
         this.bitmapDescriptorList = ArrayList<BitmapDescriptor>()
-        this.markerInfoList = ArrayList<BaseMarkerInfo>()
         this.picInfoList = ArrayList<BitmapDescriptor>()
     }
 
