@@ -108,10 +108,6 @@ open class BaseGoogleMap : Cloneable {
         return markerList
     }
 
-    open fun setRelatedMarkerInfo( ){
-
-    }
-
     /**
      * @return our markerOptions
      */
@@ -387,6 +383,28 @@ open class BaseGoogleMap : Cloneable {
             return false
         }
         return true
+    }
+    
+    fun setMarkerTag(marker : Marker, markerInfo : BaseMarkerInfo){
+        marker.tag = markerInfo
+    }
+
+    fun getMarkerTag(marker : Marker) : BaseMarkerInfo?{
+        markerList.forEach {
+            if(it.equals(marker)){
+                return it.tag as BaseMarkerInfo
+            }
+        }
+        throw Exception(MARKET_NOT_EXIST_ERROR)
+        return null
+    }
+
+    fun getMarkerInfo(index: Int) : BaseMarkerInfo?{
+        if(markerList.size < (index + 1)){
+            throw IndexOutOfBoundsException()
+            return null
+        }
+        return markerList.get(index).tag as BaseMarkerInfo
     }
 
     /**
