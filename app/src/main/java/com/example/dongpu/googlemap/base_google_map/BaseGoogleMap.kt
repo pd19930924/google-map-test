@@ -715,6 +715,64 @@ open class BaseGoogleMap : Cloneable {
     }
 
     /**
+     * This is used for us to draw a polygon
+     */
+    fun drawRegion(points : List<LatLng>){
+        var polylineOptions = PolylineOptions()
+        points.forEach {
+            polylineOptions.add(it)
+        }
+        mMap.addPolyline(polylineOptions)
+    }
+
+    /**
+     * This is used to judge wether a point is in a region
+     */
+    fun isPointInPolygon(point : LatLng, region : List<LatLng>) : String{
+        if(region.size <= 2)//we must make sure that we have a close region, 2 points is a line
+            return "region is not close"
+        var flag = false   //偶数次在外面，奇数次在里面
+        val px = point.longitude
+        val py = point.latitude
+
+        for(i in 0..region.size){
+            var j = i + 1
+            if(i == region.size - 1){
+                j = 0
+            }
+            var sx = region.get(i).longitude
+            var sy = region.get(i).latitude
+            var tx = region.get(j).longitude
+            var ty = region.get(j).latitude
+
+            //判断一下点是不是和多边形的顶点重合
+            if (sx == px && sy == py || tx == px && ty == py) {
+                return "on"
+            }
+            //不在顶点的话，判断一下是不是就在当前线上
+            //做一条包含P点的，平行于y轴的直线
+            //首先保证线段端点在射线两侧，和P点不是平行
+            if (sy < py && ty >= py || sy >= py && ty < py) {
+
+                val diff = (px - sx) * (ty - sy) - (py - sy) * (tx - sx)
+                //判断一下px点是不是在边界上
+                if (diff == 0.0) {
+                    return "on"
+                } else {
+                    //求一下交点
+                    val x = sx + (py - sy) * (tx - sx) / (ty - sy)
+                    //射线只往右边走
+                    if (x > 0) {
+                        flag = !flag
+                    }
+                }
+            }
+        }
+
+        return if (flag) "in" else "out"
+    }
+
+    /**
      * open our cluster function
      * @param context
      * @param showAnimation do you want to see the animation? default value is false
