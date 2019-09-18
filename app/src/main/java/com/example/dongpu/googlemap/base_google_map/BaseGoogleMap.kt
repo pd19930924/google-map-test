@@ -718,7 +718,7 @@ open class BaseGoogleMap : Cloneable {
      * This is used for us to draw a polygon
      */
     fun drawRegion(points : List<LatLng>){
-        if(points.size < 2) return
+        if(points.size < 2) return   //make sure that count of points is more than 2
         var polylineOptions = PolylineOptions()
         points.forEach {
             polylineOptions.add(it)
@@ -1054,7 +1054,7 @@ open class BaseGoogleMap : Cloneable {
     }
 
     companion object {
-        val TAG = "BaseGoogleMap"
+        val TAG = BaseGoogleMap.javaClass.name
         val LATLNG_NOT_EXIST_ERROR = "The position is not exisiting"
         val MARKET_NOT_EXIST_ERROR = "The marker is not existing"
         val INDEX_OUT_OF_RANGE_ERROR = "The index is out of range"
