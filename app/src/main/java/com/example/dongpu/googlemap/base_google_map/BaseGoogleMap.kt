@@ -718,10 +718,12 @@ open class BaseGoogleMap : Cloneable {
      * This is used for us to draw a polygon
      */
     fun drawRegion(points : List<LatLng>){
+        if(points.size < 2) return
         var polylineOptions = PolylineOptions()
         points.forEach {
             polylineOptions.add(it)
         }
+        polylineOptions.add(points.get(0))  //close the polygon
         mMap.addPolyline(polylineOptions)
     }
 
